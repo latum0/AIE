@@ -1,0 +1,162 @@
+.gig-desc {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: none;
+}
+
+.main-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.horizontal-section-desc {
+  display: flex;
+  align-items: center;
+  
+  gap: 20px;
+  
+  flex-wrap: nowrap;
+  
+}
+
+.profile-section-desc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  
+  
+  
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: auto 0;
+}
+
+.username {
+  font-weight: 500;
+  color: #007bff;
+  line-height: 1.2;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  
+}
+
+.star {
+  color: gold;
+}
+
+.feedback-count {
+  color: #666;
+}
+
+.queue-info {
+  display: flex;
+  align-items: center;
+  color: #999;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.carousel {
+  position: relative;
+  margin: 20px 0;
+  height: 350px;
+  overflow: visible; /* Added to prevent clipping */
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+  padding: 16px;
+  transition: all 0.3s;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.arrow:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+}
+
+.left-arrow {
+  left: -28px; /* Changed from 25px to -28px */
+}
+
+.right-arrow {
+  right: -28px; /* Changed from 25px to -28px */
+}
+
+.main-image {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.thumbnail.active {
+  opacity: 1;
+  transform: scale(1.05);
+  border: 2px solid #007bff;
+}
+
+.thumbnail:hover {
+  opacity: 0.8;
+}

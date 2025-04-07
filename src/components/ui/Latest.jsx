@@ -2,30 +2,30 @@ import React from 'react';
 import './Latest.css';
 
 const JobCard = ({ icon, title, description, bid }) => (
-  <div className="job-card">
-    <img src={icon} alt="Job Icon" className="job-icon"/>
-    <h3 className="job-title">{title}</h3>
-    <p className="job-description">{description}</p>
-    <div className="bid-info">
-      <span className="bid-label">Highest bid</span>
-      <span className="bid-amount">${bid}</span>
-      <a href="#" className="apply-btn">Apply now</a>
+  <div className="unique-job-card">
+    <img src={icon} alt="Job Icon" className="unique-job-icon"/>
+    <h3 className="unique-job-title">{title}</h3>
+    <p className="unique-job-description">{description}</p>
+    <div className="unique-bid-info">
+      <span className="unique-bid-label">Highest bid</span>
+      <span className="unique-bid-amount">${bid}</span>
+      <a href="#" className="unique-apply-btn">Apply now</a>
     </div>
   </div>
 );
 
 const Latest = () => {
   return (
-    <div className="latest-container">
-      <div className="header-section">
-        <div className="header-text">
-          <p className="subtitle">The latest freelance work!</p>
-          <h1 className="main-title">
-            Recently Posted <span className="highlight">Works</span>
+    <div className="unique-latest-container">
+      <div className="unique-header-section">
+        <div className="unique-header-text">
+          <p className="unique-subtitle">The latest freelance work!</p>
+          <h1 className="unique-main-title">
+            Recently Posted <span className="unique-highlight">Works</span>
           </h1>
         </div>
       </div>
-      <div className="card-container">
+      <div className="unique-card-container">
         <JobCard 
           icon="src/assets/icons/logoDesign.png"
           title="Logo Design"

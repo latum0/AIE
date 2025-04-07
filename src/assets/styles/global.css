@@ -7,7 +7,7 @@
   }
   
   body {
-    margin: 0;
+    margin: 20px;
     font-family: 'Arial', sans-serif;
   }
   
@@ -36,3 +36,6 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+
+  

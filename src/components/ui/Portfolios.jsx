@@ -2,11 +2,11 @@ import React from 'react';
 import './Portfolios.css';
 
 const PortfolioCard = ({ image, name, role }) => (
-  <div className="portfolio-card">
-    <img src={image} alt={`${name}'s Portfolio`} className="profile-image"/>
-    <h3 className="freelancer-name">{name}</h3>
-    <p className="role">{role}</p>
-    <a href="#" className="view-portfolio">
+  <div className="unique-portfolio-card">
+    <img src={image} alt={`${name}'s Portfolio`} className="unique-profile-image"/>
+    <h3 className="unique-freelancer-name">{name}</h3>
+    <p className="unique-role">{role}</p>
+    <a href="#" className="unique-view-portfolio">
       <span>→</span>
     </a>
   </div>
@@ -14,14 +14,14 @@ const PortfolioCard = ({ image, name, role }) => (
 
 const Portfolios = () => {
   return (
-    <div className="portfolios-container">
-      <div className="header-section">
-        <p className="subtitle">Logos, websites, book covers & more!</p>
-        <h2 className="main-title">
-          Checkout The Best <span className="highlight">Portfolios</span> Here
+    <div className="unique-portfolios-container">
+      <div className="unique-header-section">
+        <p className="unique-subtitle">Logos, websites, book covers & more!</p>
+        <h2 className="unique-main-title">
+          Checkout The Best <span className="unique-highlight">Portfolios</span> Here
         </h2>
       </div>
-      <div className="card-container">
+      <div className="unique-card-container">
         <PortfolioCard 
           image="src/assets/icons/fl1.png"
           name="Freelancer 1"
