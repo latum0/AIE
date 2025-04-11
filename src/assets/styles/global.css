@@ -1,11 +1,13 @@
 /* assets/styles/global.css */
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #ecf0f1;
+  --primary-color: #2A254B;
+  --secondary-color: #4E4D93;
+  --accent-color: #FF8C42;
+  --light-bg: #F9F9F9;
   }
   
   body {
-    margin: 0;
+    margin: 20px;
     font-family: 'Arial', sans-serif;
   }
   
@@ -14,3 +16,26 @@
     margin: 0 auto;
     padding: 20px;
   }
+
+
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.17, 0.55, 0.55, 1);
+  }
+  
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+
+  
