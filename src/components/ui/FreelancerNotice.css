@@ -1,0 +1,32 @@
+.freelancer-notice {
+    background-color: #f0f4ff;
+    border-radius: 6px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #1a237e;
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-info {
+    margin-right: 8px;
+    color: #1a237e;
+    font-size: 1rem;
+  }
+  
+  .become-seller {
+    font-weight: bold;
+    text-decoration: none;
+    color: #1a237e;
+  }
+  .become-seller:hover {
+    text-decoration: underline;
+  }
+  

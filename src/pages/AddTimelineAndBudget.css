@@ -1,0 +1,54 @@
+.timeline-budget-page {
+    width: 100%;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color:  white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .timeline-form label {
+    display: block;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .timeline-form input {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.3rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .btn-submit {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;;
+    
+    margin-top: 1.5rem;
+    text-align: right;
+  }
+  
+  .btn-submit:hover {
+    background-color: #ff6600;
+  }
+  .submit-container {
+    text-align: right;
+  }
+  
+  
+  .icon {
+    margin-right: 8px;
+    color: black;
+  }
+  
