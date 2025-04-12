@@ -1,0 +1,16 @@
+.about-gig {
+    margin-top: 20px;
+    
+  }
+  
+  .title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .content {
+    white-space: pre-line; /* Preserve line breaks */
+    word-break: break-word; /* Handle long words */
+    padding-left: 15px; /* Matches mockup indentation */
+  }

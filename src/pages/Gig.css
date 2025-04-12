@@ -1,0 +1,138 @@
+.gig-container {
+  display: flex;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  gap: 30px; /* Reduced gap */
+}
+
+.left-column {
+  flex: 1;
+  max-width: calc(100% - 450px - 30px); /* Dynamic width calculation */
+}
+
+.right-column {
+  width: 450px; /* Maintained original size */
+  padding-left: 30px;
+  border-left: 1px solid #eee;
+}
+
+.contact-seller {
+  background: white;
+  border: 2px solid #62646A;
+  color: #62646A;
+  font-weight: 600;
+  padding: 16px 30px;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 25px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+
+.contact-seller:hover {
+  background: #FF8C42;
+  border: 2px solid #FF8C42;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* CardService styling */
+.card-service {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+}
+
+.package {
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.package:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border: none;
+}
+
+.package-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.package-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #007bff;
+  margin: 15px 0;
+}
+
+.package-features {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.feature-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.feature-icon {
+  color: #28a745;
+}
+
+/* GigDesc styling */
+.gig-desc {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.main-title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.profile-section {
+  margin-bottom: 25px;
+}
+
+.carousel {
+  margin: 30px 0;
+}
+
+.thumbnail {
+  width: 100px !important;
+  height: 60px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .gig-container {
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .right-column {
+    width: 100%;
+    border-left: none;
+    padding-left: 0;
+    order: -1;
+  }
+  
+  .contact-seller {
+    margin-top: 20px;
+  }
+  
+  .left-column {
+    max-width: 100%;
+  }
+}
