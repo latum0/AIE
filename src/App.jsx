@@ -1,38 +1,38 @@
-<<<<<<< HEAD
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import AccountSettings from './pages/AccountSettings';
-import Home from './pages/Home';
-
-function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/account-settings" element={<AccountSettings />} />
-                <Route path="/%20accountSettings" element={<Navigate to="/account-settings" replace />} />
-            </Routes>
-        </Router>
-    );
-=======
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // ✅ Ajout de Routes et Route
+import { Navigate } from 'react-router-dom';
+
 import Home from './pages/Home';
 import './App.css';
 import Header from './components/ui/Header';
 import Footer from './components/ui/Footer';
+import Navbar1 from './components/ui/Navbar1';
 import Gig from './pages/Gig';
-
+import AccountSettings from './pages/AccountSettings';
+import OrderExtras from './pages/OrderExtras';
+import ConfirmP from './pages/ConfirmP';
+import Submit from './pages/submit';
 function App() {
   return (
-    <div >
-      {/*<Gig/>*/}
+    <BrowserRouter>
+      <div>
+        {/*<Header />*/}
+        {/*<Navbar1 />*/}
 
-     <Header/>
-      
-      <Home/>
-      <Footer/>
-    </div>
+        <Routes>
+          <Route path="/" element={<Navigate to="/orderExtras" />} />
+          {/*<Route path="/" element={<Home />} />*/}
+          {/*<Route path="/gig" element={<Gig />} />*/}
+          {/*<Route path="/account" element={<AccountSettings />} />*/}
+          <Route path="/orderExtras" element={<OrderExtras />} />
+          <Route path="/confirmP" element={<ConfirmP />} />
+          <Route path="/submit" element={<Submit />} />
+        </Routes>
+
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
->>>>>>> 26b7e18aa3b0c75a98195607cc7e2c92aa347687
 }
 
 export default App;
