@@ -7,16 +7,16 @@ const Hero = () => {
     <section className="hero">
       <div className="hero-container">
         <div className="hero-content">
-          <h1>Are you looking for Freelancers?</h1>
+          <h1>Vous cherchez des freelances ?</h1>
           <p className="hero-subtitle">
-            Hire Great Freelancers, Fast. Spacelance helps you hire elite freelancers at a moment's notice
+            Engagez les meilleurs talents en un clic. Spacelance vous connecte aux freelances experts en temps réel
           </p>
           <div className="hero-actions">
-            <button className="hire-btn">Hire a freelancer</button>
+            <button className="hire-btn">Engager un freelance</button>
             <div className="search-container">
               <input 
                 type="text" 
-                placeholder="Search freelance work" 
+                placeholder="Rechercher une mission" 
                 className="search-input"
               />
               <FiSearch className="search-icon" />
@@ -26,7 +26,7 @@ const Hero = () => {
         <div className="hero-image-container">
           <img 
             src="src/assets/icons/Hero.png" 
-            alt="Freelancers illustration" 
+            alt="Illustration freelances" 
             className="hero-image"
           />
         </div>

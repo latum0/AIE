@@ -14,14 +14,14 @@ const ReviewsComment = ({
         <div className="avatar">
           <img 
             src={user.avatar} 
-            alt={`${user.name} avatar`} 
+            alt={`Avatar ${user.name}`} 
             onError={(e) => e.target.src = `https://ui-avatars.com/api/?name=${user.initials}`} 
           />
         </div>
         <div className="details">
           <div className="name">{user.name}</div>
           <div className="location">
-            <img src={user.flag} alt="Country flag" />
+            <img src={user.flag} alt="Drapeau pays" />
             {user.country}
           </div>
         </div>
@@ -41,12 +41,12 @@ const ReviewsComment = ({
       </div>
 
       <div className="helpful-section">
-        <div>Helpful?</div>
+        <div>Utile ?</div>
         <button className="vote-btn upvote">
-          <FaThumbsUp /> Yes
+          <FaThumbsUp /> Oui
         </button>
         <button className="vote-btn downvote">
-          <FaThumbsDown /> No
+          <FaThumbsDown /> Non
         </button>
       </div>
 
@@ -54,13 +54,13 @@ const ReviewsComment = ({
         <div className="avatar">
           <img 
             src={response.avatar} 
-            alt="Seller avatar" 
+            alt="Avatar vendeur" 
             onError={(e) => e.target.src = `https://ui-avatars.com/api/?name=${response.initials}`} 
           />
         </div>
         <div className="response-content">
           <div className="header">
-            Seller's Response
+            Réponse du vendeur
           </div>
           <div className="message">
             {response.message}

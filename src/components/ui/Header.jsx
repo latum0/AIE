@@ -7,9 +7,9 @@ const Header = () => {
       <div className="header-content">
         <img src="src/assets/icons/logoMC.png" alt="" className="logoAIE"  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}/>
         <nav className="nav-links">
-          <a href="#become-seller">Become a seller</a>
-          <a href="#signin">Sign In</a>
-          <button className="join-btn">Join</button>
+          <a href="#become-seller">Devenir vendeur</a>
+          <a href="#signin">Se connecter</a>
+          <button className="join-btn">Rejoindre</button>
         </nav>
       </div>
     </header>

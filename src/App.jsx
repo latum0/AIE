@@ -8,10 +8,10 @@ import Gig from './pages/Gig';
 function App() {
   return (
     <div >
-      {/*<Gig/>*/}
+     
 
      <Header/>
-      
+      {/*<Gig/>*/}
       <Home/>
       <Footer/>
     </div>

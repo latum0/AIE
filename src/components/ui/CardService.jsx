@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { FaCheckCircle, FaTimesCircle, FaClock, FaSyncAlt } from 'react-icons/fa';
 import './CardService.css';
 
-// Icon mapping for dynamic rendering
 const iconMap = {
   FaCheckCircle: <FaCheckCircle />,
   FaTimesCircle: <FaTimesCircle />,
@@ -18,7 +17,6 @@ const CardService = ({ packages }) => {
 
   return (
     <div className="card-container">
-      {/* Tabs */}
       <div className="tabs">
         {packages.map((pkg) => (
           <button
@@ -31,7 +29,6 @@ const CardService = ({ packages }) => {
         ))}
       </div>
 
-      {/* Content */}
       <div className="card-content">
         <div className="header">
           <h5>{currentPackage.promoName}</h5>
@@ -43,11 +40,11 @@ const CardService = ({ packages }) => {
         <div className="details">
           <div className="delivery">
             {iconMap['FaClock']}
-            <span>{currentPackage.deliveryDays} Days Delivery</span>
+            <span>{currentPackage.deliveryDays} Jours de livraison</span>
           </div>
           <div className="revisions">
             {iconMap['FaSyncAlt']}
-            <span>{currentPackage.revisions} Revision</span>
+            <span>{currentPackage.revisions} Révision</span>
           </div>
         </div>
 
@@ -62,7 +59,7 @@ const CardService = ({ packages }) => {
           ))}
         </ul>
 
-        <button className="continue-btn">Continue →</button>
+        <button className="continue-btn">Continuer →</button>
       </div>
     </div>
   );

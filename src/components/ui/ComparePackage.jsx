@@ -4,12 +4,12 @@ import './ComparePackage.css';
 const ComparePackage = ({ data }) => {
   return (
     <div className="compare-package">
-      <h3 className="title">Compare Packages</h3>
+      <h3 className="title">Comparer les forfaits</h3>
       
       <table>
         <thead>
           <tr>
-            <th>Package</th>
+            <th>Forfait</th>
             {data.headers.map(header => (
               <th key={header.title}>
                 <div className="price">{header.price}</div>
@@ -48,7 +48,6 @@ const ComparePackage = ({ data }) => {
             ))}
           </tr>
           
-          
           <tr className="button-row">
             <td></td>
             {data.headers.map(header => (
@@ -57,7 +56,7 @@ const ComparePackage = ({ data }) => {
                   className="select-button"
                   style={{ backgroundColor: header.color }}
                 >
-                  Select
+                  Sélectionner
                 </button>
               </td>
             ))}

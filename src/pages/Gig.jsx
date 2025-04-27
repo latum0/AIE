@@ -137,7 +137,7 @@ function Gig() {
     {
       name: 'Basic',
       promoName: 'BASIC PROMO',
-      price: '₹868',
+      price: '8000DA',
       description: 'Basic Package Only Laptop-scenes Includes, Background Music, Logo, and 720HD Video',
       deliveryDays: 4,
       revisions: 1,
@@ -153,7 +153,7 @@ function Gig() {
     {
       name: 'Standard',
       promoName: 'STANDARD PROMO',
-      price: '₹1299',
+      price: '1299DA',
       description: 'Standard Package Includes Full Scenes, HD Quality, and Unlimited Revisions',
       deliveryDays: 3,
       revisions: 'Unlimited',
@@ -169,7 +169,7 @@ function Gig() {
     {
       name: 'Premium',
       promoName: 'PREMIUM PROMO',
-      price: '₹1999',
+      price: '1999DA',
       description: 'Premium Package with Exclusive Features and Priority Support',
       deliveryDays: 2,
       revisions: 'Unlimited',

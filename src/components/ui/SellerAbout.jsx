@@ -4,12 +4,12 @@ import './SellerAbout.css';
 const SellerAbout = ({ data }) => {
   return (
     <div className="seller-about">
-      <h3 className="title">About The Seller</h3>
+      <h3 className="title">À propos du vendeur</h3>
       
       <div className="profile-section">
         <img 
           src={data.profilePicture} 
-          alt={`${data.username} profile`} 
+          alt={`Profil ${data.username}`} 
           className="profile-picture"
         />
         
@@ -26,30 +26,30 @@ const SellerAbout = ({ data }) => {
             </div>
           </div>
           
-          <button className="contact-button">Contact Me</button>
+          <button className="contact-button">Me contacter</button>
         </div>
       </div>
 
       <div className="info-card">
         <div className="info-grid">
           <div className="info-row">
-            <div className="label">From</div>
+            <div className="label">De</div>
             <div className="value">{data.location}</div>
           </div>
           <div className="info-row">
-            <div className="label">Member since</div>
+            <div className="label">Membre depuis</div>
             <div className="value">{data.memberSince}</div>
           </div>
           <div className="info-row">
-            <div className="label">Avg. response time</div>
+            <div className="label">Réponse moyenne</div>
             <div className="value">{data.responseTime}</div>
           </div>
           <div className="info-row">
-            <div className="label">Last delivery</div>
+            <div className="label">Dernière livraison</div>
             <div className="value">{data.lastDelivery}</div>
           </div>
           <div className="info-row">
-            <div className="label">Languages</div>
+            <div className="label">Langues</div>
             <div className="value">{data.languages.join(', ')}</div>
           </div>
         </div>

@@ -17,7 +17,7 @@ const GigDesc = ({ data }) => {
           <a href={`/profile/${data.username}`} className="profile-link">
             <img 
               src={data.profilePicture} 
-              alt={`${data.username} profile`} 
+              alt={`Profil ${data.username}`} 
               className="profile-picture"
             />
             <span className="username">{data.username}</span>
@@ -34,7 +34,7 @@ const GigDesc = ({ data }) => {
         </div>
 
         <div className="queue-info">
-          {data.queueCount} Orders in Queue
+          {data.queueCount} Commandes en attente
         </div>
       </div>
 
@@ -47,7 +47,7 @@ const GigDesc = ({ data }) => {
         </button>
         <img 
           src={data.images[currentImageIndex]} 
-          alt={`Gig preview ${currentImageIndex + 1}`} 
+          alt={`Aperçu ${currentImageIndex + 1}`} 
           className="main-image"
         />
         <button 
@@ -63,7 +63,7 @@ const GigDesc = ({ data }) => {
           <img 
             key={index} 
             src={image} 
-            alt={`Thumbnail ${index + 1}`} 
+            alt={`Miniature ${index + 1}`} 
             className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`} 
             onClick={() => handleThumbnailClick(index)}
           />

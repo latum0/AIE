@@ -7,9 +7,9 @@ const Footer = () => {
     <footer className="footer-container">
       <div className="content-wrapper">
         <div className="logo-section">
-          <img src="src/assets/icons/logoMC.png" alt="Skill Market Logo" className="logoAIE" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}/>
+          <img src="src/assets/icons/logoMC.png" alt="Logo Skill Market" className="logoAIE" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}/>
           <p className="tagline">
-            Powerful Freelance Marketplace System with ability to change the Users (Freelancers & Clients)
+            Plateforme freelance puissante permettant de connecter les utilisateurs (freelances et clients)
           </p>
           <div className="social-icons">
             <a href="#" className="icon-link"><FaInstagram /></a>
@@ -20,28 +20,28 @@ const Footer = () => {
 
         <div className="links-section">
           <div className="link-column">
-            <h4>For Clients</h4>
+            <h4>Pour les clients</h4>
             <ul>
-              <li><a href="#">Find Freelancers</a></li>
-              <li><a href="#">Post Project</a></li>
-              <li><a href="#">Refund Policy</a></li>
-              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Trouver des freelances</a></li>
+              <li><a href="#">Publier un projet</a></li>
+              <li><a href="#">Politique de remboursement</a></li>
+              <li><a href="#">Politique de confidentialité</a></li>
             </ul>
           </div>
 
           <div className="link-column">
-            <h4>For Freelancers</h4>
+            <h4>Pour les freelances</h4>
             <ul>
-              <li><a href="#">Find Work</a></li>
-              <li><a href="#">Create Account</a></li>
+              <li><a href="#">Trouver des missions</a></li>
+              <li><a href="#">Créer un compte</a></li>
             </ul>
           </div>
 
           <div className="contact-column">
-            <h4>Call Us</h4>
+            <h4>Nous contacter</h4>
             <div className="contact-item">
               <span className="icon"><i className="fas fa-map-marker-alt"></i></span>
-              <span className="text">Algeria</span>
+              <span className="text">Algérie</span>
             </div>
             <div className="contact-item">
               <span className="icon"><i className="fas fa-phone"></i></span>
@@ -56,7 +56,7 @@ const Footer = () => {
       </div>
 
       <div className="copyright">
-        <p>2025 skillMarket. All rights reserved</p>
+        <p>2025 SkillMarket. Tous droits réservés</p>
       </div>
     </footer>
   );

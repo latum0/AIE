@@ -3,7 +3,7 @@ import './Portfolios.css';
 
 const PortfolioCard = ({ image, name, role }) => (
   <div className="unique-portfolio-card">
-    <img src={image} alt={`${name}'s Portfolio`} className="unique-profile-image"/>
+    <img src={image} alt={`Portfolio ${name}`} className="unique-profile-image"/>
     <h3 className="unique-freelancer-name">{name}</h3>
     <p className="unique-role">{role}</p>
     <a href="#" className="unique-view-portfolio">
@@ -16,26 +16,26 @@ const Portfolios = () => {
   return (
     <div className="unique-portfolios-container">
       <div className="unique-header-section">
-        <p className="unique-subtitle">Logos, websites, book covers & more!</p>
+        <p className="unique-subtitle">Logos, sites web, couvertures de livres et plus !</p>
         <h2 className="unique-main-title">
-          Checkout The Best <span className="unique-highlight">Portfolios</span> Here
+          Découvrez les meilleurs <span className="unique-highlight">portfolios</span>
         </h2>
       </div>
       <div className="unique-card-container">
         <PortfolioCard 
           image="src/assets/icons/fl1.png"
-          name="Freelancer 1"
-          role="UI/UX Designer"
+          name="Freelance 1"
+          role="Designer UI/UX"
         />
         <PortfolioCard 
           image="src/assets/icons/fl2.png"
-          name="Freelancer 2"
-          role="Graphic Designer"
+          name="Freelance 2"
+          role="Graphiste"
         />
         <PortfolioCard 
           image="src/assets/icons/fl2.png"
-          name="Freelancer 3"
-          role="Graphic Designer"
+          name="Freelance 3"
+          role="Graphiste"
         />
       </div>
     </div>
