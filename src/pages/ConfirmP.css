@@ -1,0 +1,265 @@
+/* ConfirmPay.css */
+
+.confirmpay-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9fafb;
+}
+
+.confirmpay-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.confirmpay-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    gap: 10px;
+}
+
+.step {
+    padding: 0.5rem 1rem;
+    position: relative;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.step.active {
+    color: #3b82f6;
+}
+
+.step:not(:last-child):after {
+    content: ">";
+    position: absolute;
+    right: -15px;
+    color: #6b7280;
+}
+
+.confirmpay-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.order-summary-section,
+.payment-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.summary-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 1.5rem 0;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: 15px 0 0;
+    margin-top: 10px;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.payment-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.payment-option:hover {
+    border-color: #93c5fd;
+}
+
+.payment-option.active {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.payment-icons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 1.8rem;
+}
+
+.credit-card-form {
+    margin: 25px 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.payment-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.back-btn {
+    background: white;
+    border: 1px solid #d1d5db;
+    color: #4b5563;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.back-btn:hover {
+    background-color: #f9fafb;
+}
+
+.bouton-paiement {
+    background-color: #3b82f6;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex: 2;
+}
+
+.bouton-paiement:hover {
+    background-color: #2563eb;
+}
+
+.bouton-paiement:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .confirmpay-page {
+        padding-top: 70px;
+    }
+
+    .confirmpay-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .payment-actions {
+        flex-direction: column;
+    }
+
+    .back-btn,
+    .bouton-paiement {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-methods {
+        flex-direction: column;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+/* Style pour les éléments sélectionnés */
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-total {
+    font-weight: bold;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+/* Animation pendant le traitement */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.processing::after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
