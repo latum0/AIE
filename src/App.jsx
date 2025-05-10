@@ -12,23 +12,32 @@ import AccountSettings from './pages/AccountSettings';
 import OrderExtras from './pages/OrderExtras';
 import ConfirmP from './pages/ConfirmP';
 import Submit from './pages/submit';
+import Chat from './pages/Chat';
+import FreelancerProfile from './pages/FreelancerProfile'
+
+
 function App() {
   return (
    
     <BrowserRouter>
       <div>
         {/*<Header />*/}
+        <FreelancerProfile/>
+        
         {/*<Navbar1 />*/}
-
+        {/*<Chat/>*/}
+        {/*  
         <Routes>
           <Route path="/" element={<Navigate to="/orderExtras" />} />
-          {/*<Route path="/" element={<Home />} />*/}
-          {/*<Route path="/gig" element={<Gig />} />*/}
-          {/*<Route path="/account" element={<AccountSettings />} />*/}
+          <Route path="/" element={<Home />} 
+          {<Route path="/gig" element={<Gig />} 
+          <Route path="/account" element={<AccountSettings />} 
           <Route path="/orderExtras" element={<OrderExtras />} />
           <Route path="/confirmP" element={<ConfirmP />} />
           <Route path="/submit" element={<Submit />} />
         </Routes>
+        */}
+       
 
         <Footer />
       </div>
