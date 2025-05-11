@@ -1,0 +1,137 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2rem;
+    /* Taille réduite du padding */
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 90px;
+    /* Hauteur fixe */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+}
+
+.navbar-steps-centered {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right-spacer {
+    width: calc(32px + 2rem);
+    /* Largeur du logo + padding */
+    visibility: hidden;
+}
+
+.navbar-logo .logo-img {
+    height: 32px;
+    /* Taille réduite du logo */
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.steps-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    min-width: 100px;
+    margin: 0 10px;
+    /* Largeur réduite */
+}
+
+.step-circle {
+    width: 24px;
+    /* Taille réduite */
+    height: 24px;
+    /* Taille réduite */
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    /* Espacement réduit */
+    font-size: 0.8rem;
+    /* Texte plus petit */
+}
+
+.step-text {
+    font-size: 0.8rem;
+    /* Taille de texte réduite */
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Connecteur entre les étapes */
+.connector {
+    height: 2px;
+    width: 30px;
+    /* Longueur réduite */
+    background-color: #e2e8f0;
+}
+
+/* Styles actifs/complétés (inchangés) */
+.step.active .step-circle {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.step.completed .step-circle {
+    background-color: #10b981;
+    color: white;
+}
+
+/* Version mobile */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.8rem 1rem;
+        height: 50px;
+    }
+
+    .navbar-logo .logo-img {
+        height: 28px;
+    }
+
+    .step {
+        min-width: auto;
+    }
+
+    .step-text {
+        font-size: 0.7rem;
+    }
+
+    .connector {
+        width: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-text {
+        display: none;
+    }
+
+    .step-circle {
+        width: 20px;
+        height: 20px;
+    }
+}
