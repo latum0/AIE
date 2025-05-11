@@ -8,12 +8,12 @@ const BoutonContinuer = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-      navigate('/AddTimelineAndBudget');
+      navigate('/add-timeline');
     };
   return (
     <div className="bouton-continuer">
       <button onClick={handleClick}>
-        Continuer <FaArrowRight className="icon" />
+        Continue <FaArrowRight className="icon" />
       </button>
     </div>
   );

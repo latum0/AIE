@@ -2,7 +2,6 @@ import React from 'react';
 import './FreelancerNotice.css';
 import { FaInfoCircle } from 'react-icons/fa';
 
-// Props : language (ex: 'en' ou 'fr')
 const FreelancerNotice = ({ language = 'en' }) => {
   const content = {
     en: {

@@ -1,14 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EtapesNavbar.css';
-
-const EtapesNavbar = ({ currentStep }) => {
+const EtapesNavbar = ({ currentStep, steps, exitPath = '/' }) => {
   const navigate = useNavigate();
-
-  const steps = [
-    { label: "Décrivez brièvement votre projet", path: "/FormulaireProjet" },
-    { label: "Ajoutez un délai et un budget", path: "/AddTimelineAndBudget" },
-  ];
 
   return (
     <div className="etapes-navbar-container">
@@ -30,7 +24,7 @@ const EtapesNavbar = ({ currentStep }) => {
           </React.Fragment>
         ))}
       </div>
-      <div className="exit-button" onClick={() => navigate('/')}>
+      <div className="exit-button" onClick={() => navigate(exitPath)}>
         Exit
       </div>
     </div>

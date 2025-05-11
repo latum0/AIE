@@ -6,9 +6,9 @@ const DescriptionProjet = () => {
   return (
     <div className="description-projet">
       <label>
-        <FaRegCommentDots className="icon" /> Détaillez votre projet
+        <FaRegCommentDots className="icon" /> Detail your project
       </label>
-      <textarea rows="5" placeholder="Décrivez ici votre projet, ses objectifs, contraintes, etc."></textarea>
+      <textarea rows="5" placeholder="Describe your project here, its objectives, constraints, etc."></textarea>
     </div>
   );
 };

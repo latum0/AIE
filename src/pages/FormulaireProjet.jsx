@@ -12,9 +12,15 @@ import FreelancerNotice from '../components/ui/FreelancerNotice';
 const FormulaireProjet = () => {
   return (
     <div>
-      <EtapesNavbar currentStep="Décrivez brièvement votre projet" />
+     <EtapesNavbar
+  currentStep="Briefly describe your project"
+  steps={[
+    { label: "Briefly describe your project", path: "/FormulaireProjet" },
+    { label: "Add a timeline and budget", path: "/AddTimelineAndBudget" },
+  ]}
+/>
       <div className="formulaire-projet">
-      <FreelancerNotice language="fr" />
+        <FreelancerNotice language="en" />
         <TitreProjet />
         <DescriptionProjet />
         <UploadFichier />

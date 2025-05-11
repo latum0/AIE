@@ -6,21 +6,27 @@ import EtapesNavbar from '../components/ui/EtapesNavbar';
 const AddTimelineAndBudget = () => {
   return (
     <div>
-      <EtapesNavbar currentStep="Ajoutez un délai et un budget" />
+       <EtapesNavbar
+        currentStep="Ajouter un calendrier et un budget"
+        steps={[
+          { label: "Décrivez brièvement votre projet", path: "/FormulaireProjet" },
+          { label: "Ajouter un calendrier et un budget", path: "/AddTimelineAndBudget" },
+        ]}
+      />
       <div className="timeline-budget-page">
         
         <form className="timeline-form">
           <label>
             <FaClock className="icon" /> Durée du projet :
-            <input type="text" placeholder="ex : 2 semaines" />
+            <input type="text" placeholder="par exemple, 2 semaines" />
           </label>
           <label>
             <FaEuroSign className="icon" /> Budget :
-            <input type="text" placeholder="ex : 500 €" />
+            <input type="text" placeholder="par exemple, 500 €" />
           </label>
           <div className="submit-container">
-  <button type="submit" className="btn-submit">Soumettre</button>
-</div>
+            <button type="submit" className="btn-submit">Soumettre</button>
+          </div>
         </form>
       </div>
     </div>

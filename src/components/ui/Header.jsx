@@ -1,15 +1,29 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Header.css';
 
-const Header = () => {
+const Header = ({ toggleSidebar }) => {
   return (
     <header className="header">
       <div className="header-content">
-        <img src="src/assets/icons/logoMC.png" alt="" className="logoAIE"  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}/>
+        <Link to="/home">
+          <img 
+            src="/src/assets/icons/logoMC.png" 
+            alt="Logo" 
+            className="logo"
+          />
+        </Link>
         <nav className="nav-links">
-          <a href="#become-seller">Become a seller</a>
-          <a href="#signin">Sign In</a>
-          <button className="join-btn">Join</button>
+          {/* Corrigé : redirige vers /freelancer (Tableau de bord en index) */}
+          <Link to="/freelancer" className="seller-link">
+            Devenir freelancer
+          </Link>
+          <Link to="/login" className="signin-link">
+            Se connecter
+          </Link>
+          <Link to="/signup" className="join-btn">
+            S'inscrire
+          </Link>
         </nav>
       </div>
     </header>
