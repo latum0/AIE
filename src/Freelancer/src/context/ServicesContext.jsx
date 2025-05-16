@@ -1,104 +1,162 @@
 import { createContext, useState, useEffect } from 'react';
-
-// Sample data for services
-const sampleServices = [
-  {
-    id: 1,
-    title: 'Web Development',
-    description: 'Professional web development services including frontend and backend work.',
-    price: 50,
-    category: 'Development',
-    deliveryTime: '3 days',
-    isActive: true,
-    createdAt: '2023-09-15T10:00:00Z',
-    image: 'https://images.pexels.com/photos/169573/pexels-photo-169573.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-  },
-  {
-    id: 2,
-    title: 'Logo Design',
-    description: 'Creative and professional logo design for your brand or business.',
-    price: 35,
-    category: 'Design',
-    deliveryTime: '2 days',
-    isActive: true,
-    createdAt: '2023-10-01T14:30:00Z',
-    image: 'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-  },
-  {
-    id: 3,
-    title: 'Content Writing',
-    description: 'SEO-optimized content writing for blogs, websites, and social media.',
-    price: 25,
-    category: 'Writing',
-    deliveryTime: '1 day',
-    isActive: false,
-    createdAt: '2023-10-05T09:15:00Z',
-    image: 'https://images.pexels.com/photos/261662/pexels-photo-261662.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-  }
-];
+import axios from 'axios';
 
 export const ServicesContext = createContext();
 
 export const ServicesProvider = ({ children }) => {
-  const [services, setServices] = useState(() => {
-    // Try to get services from localStorage
-    const savedServices = localStorage.getItem('services');
-    return savedServices ? JSON.parse(savedServices) : sampleServices;
-  });
-  
-  // Save services to localStorage whenever they change
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Configuration de l'API
+  const API_URL = 'http://localhost:5000/api/gigs';
+
+  // Récupérer les services du freelance connecté
+  const fetchFreelancerServices = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('Authentication required');
+
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      
+      // Utilisez l'endpoint qui récupère les gigs par utilisateur
+      const response = await axios.get(`${API_URL}/freelancer/my-gigs`, config);
+      setServices(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    localStorage.setItem('services', JSON.stringify(services));
-  }, [services]);
-  
-  // Add a new service
-  const addService = (service) => {
-    const newService = {
-      ...service,
-      id: Date.now(),
-      createdAt: new Date().toISOString(),
-      isActive: true
-    };
-    setServices([...services, newService]);
-    return newService;
+    fetchFreelancerServices();
+  }, []);
+
+  // Ajouter un nouveau service
+  const addService = async (service) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = { 
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data' // Important pour les fichiers
+        } 
+      };
+
+      // Créer FormData pour gérer l'image
+      const formData = new FormData();
+      formData.append('title', service.title);
+      formData.append('description', service.description);
+      formData.append('price', service.price);
+      formData.append('category', service.category);
+      formData.append('deliveryTime', service.deliveryTime);
+      if (service.imageFile) {
+        formData.append('image', service.imageFile);
+      }
+
+      const response = await axios.post(API_URL, formData, config);
+      setServices(prev => [...prev, response.data]);
+      return response.data;
+    } catch (err) {
+      throw err.response?.data?.message || err.message;
+    }
   };
-  
-  // Update an existing service
-  const updateService = (id, updatedData) => {
-    const updatedServices = services.map(service => 
-      service.id === id ? { ...service, ...updatedData } : service
-    );
-    setServices(updatedServices);
+
+  // Mettre à jour un service
+  const updateService = async (id, updatedData) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = { 
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        } 
+      };
+
+      const formData = new FormData();
+      formData.append('title', updatedData.title);
+      formData.append('description', updatedData.description);
+      formData.append('price', updatedData.price);
+      formData.append('category', updatedData.category);
+      formData.append('deliveryTime', updatedData.deliveryTime);
+      if (updatedData.imageFile) {
+        formData.append('image', updatedData.imageFile);
+      }
+
+      const response = await axios.put(`${API_URL}/${id}`, formData, config);
+      setServices(prev => 
+        prev.map(service => 
+          service._id === id ? response.data : service
+        )
+      );
+      return response.data;
+    } catch (err) {
+      throw err.response?.data?.message || err.message;
+    }
   };
-  
-  // Delete a service
-  const deleteService = (id) => {
-    const updatedServices = services.filter(service => service.id !== id);
-    setServices(updatedServices);
+
+  // Supprimer un service
+  const deleteService = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      
+      await axios.delete(`${API_URL}/${id}`, config);
+      setServices(prev => prev.filter(service => service._id !== id));
+    } catch (err) {
+      throw err.response?.data?.message || err.message;
+    }
   };
-  
-  // Toggle service active status
-  const toggleServiceStatus = (id) => {
-    const updatedServices = services.map(service => 
-      service.id === id ? { ...service, isActive: !service.isActive } : service
-    );
-    setServices(updatedServices);
+
+  // Activer/Désactiver un service
+  const toggleServiceStatus = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      
+      const service = services.find(s => s._id === id);
+      const response = await axios.patch(
+        `${API_URL}/${id}/status`, 
+        { isActive: !service.isActive },
+        config
+      );
+      
+      setServices(prev => 
+        prev.map(service => 
+          service._id === id ? response.data : service
+        )
+      );
+    } catch (err) {
+      throw err.response?.data?.message || err.message;
+    }
   };
-  
-  // Get a service by id
-  const getServiceById = (id) => {
-    return services.find(service => service.id === Number(id)) || null;
+
+  // Récupérer un service par ID
+  const getServiceById = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      
+      const response = await axios.get(`${API_URL}/${id}`, config);
+      return response.data;
+    } catch (err) {
+      throw err.response?.data?.message || err.message;
+    }
   };
-  
+
   const value = {
     services,
+    loading,
+    error,
     addService,
     updateService,
     deleteService,
     toggleServiceStatus,
-    getServiceById
+    getServiceById,
+    refetchServices: fetchFreelancerServices
   };
-  
+
   return (
     <ServicesContext.Provider value={value}>
       {children}
