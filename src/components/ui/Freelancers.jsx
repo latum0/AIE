@@ -8,26 +8,26 @@ const FreelancerSection = () => {
       <div className="unique-image-section">
         <img 
           src={freelancer}
-          alt="Freelancer"
+          alt="Freelance"
           className="unique-freelancer-image"
         />
         <div className="unique-stats-card">
           <div className="unique-stat-item">
             <h3>500+</h3>
-            <p>freelancers</p>
+            <p>freelances</p>
           </div>
           <div className="unique-stat-item">
             <h3>300+</h3>
-            <p>freelance work posted</p>
+            <p>missions publiées</p>
           </div>
         </div>
       </div>
       <div className="unique-content-section">
         <h2 className="unique-title">
-          Find The Best <span className="unique-highlight">Freelancers</span> Here
+          Trouvez les meilleurs <span className="unique-highlight">Freelances</span> ici
         </h2>
         <p className="unique-description">
-        Scale your projects with confidence using our global network of pre-vetted freelancers. From full-stack developers to creative designers and marketing strategists, access top-tier talent ready to deliver high-quality results. Our platform offers flexible engagement models, transparent communication tools, and a 98% client satisfaction rate - ensuring you meet deadlines without compromising on quality. Whether you need a single specialist or a complete remote team, we make building your dream team effortless.        </p>
+        Gérez vos projets en toute confiance grâce à notre réseau mondial de freelances vérifiés. Développeurs full-stack, designers créatifs ou experts en marketing - accédez à des talents d'élite prêts à livrer des résultats de qualité. Notre plateforme offre des modèles d'engagement flexibles, des outils de communication transparents et un taux de satisfaction client de 98%. Que vous ayez besoin d'un spécialiste ou d'une équipe complète, nous simplifions la création de votre dream team.        </p>
       </div>
     </div>
   );

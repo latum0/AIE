@@ -49,4 +49,8 @@ const Latest = () => {
   );
 };
 
+<<<<<<< HEAD
 export default Latest;
+=======
+export default Latest;  
+>>>>>>> 76d3590a17ed84f65109d929dd623568067305b7

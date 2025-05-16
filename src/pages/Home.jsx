@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Hero from '../components/ui/Hero';
 import Features from '../components/ui/Features';
 import Freelancers from '../components/ui/Freelancers';
@@ -11,37 +10,37 @@ import FadeIn from '../components/ui/FadeIn';
 import './Home.css';
 
 function Home() {
-  return (
-    <div className="Home-container">
-      
-      
-      <FadeIn>
-        <Hero />
-      </FadeIn>
+    return (
+        <div className="Home-container">
 
-      <FadeIn>
-        <Features />
-      </FadeIn>
 
-      <FadeIn>
-        <Freelancers />
-      </FadeIn>
+            <FadeIn>
+                <Hero />
+            </FadeIn>
 
-      <FadeIn>
-        <Latest />
-      </FadeIn>
+            <FadeIn>
+                <Features />
+            </FadeIn>
 
-      <FadeIn>
-        <Category />
-      </FadeIn>
+            <FadeIn>
+                <Freelancers />
+            </FadeIn>
 
-      <FadeIn>
-        <Portfolios />
-      </FadeIn>
+            <FadeIn>
+                <Latest />
+            </FadeIn>
 
-      
-    </div>
-  );
+            <FadeIn>
+                <Category />
+            </FadeIn>
+
+            <FadeIn>
+                <Portfolios />
+            </FadeIn>
+
+
+        </div>
+    );
 }
 
 export default Home;

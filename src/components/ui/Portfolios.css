@@ -75,7 +75,7 @@
   right: 20px;
   bottom: 20px;
   color: #ff6f00;
-  font-size: 2rem; /* Increased from 1.5rem */
+  font-size: 2rem; 
   text-decoration: none;
   transition: color 0.2s;
 }
