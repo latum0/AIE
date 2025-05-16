@@ -52,7 +52,7 @@ function App() {
   const ClientLayout = () => (
     <>
       {/* You can display both the Navbar1 and the Header (which could serve different purposes) */}
-      <Navbar1 />
+      
       <Header toggleSidebar={toggleSidebar} />
       <Routes>
         {/* Redirect root to home */}
@@ -60,7 +60,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         {/* Both versions included Gig; one with an ID param and one without */}
         <Route path="/gig" element={<Gig />} />
-        <Route path="/gig/:id" element={<Gig />} />
+        <Route path="/gigs/:id" element={<Gig />} />
         <Route path="/account" element={<AccountSettings />} />
         <Route path="/orderExtras" element={<OrderExtras />} />
         <Route path="/confirmP" element={<ConfirmP />} />

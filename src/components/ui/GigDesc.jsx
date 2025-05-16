@@ -1,25 +1,38 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { useState } from "react"
-import "./GigDesc.css"
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./GigDesc.css";
 
 const GigDesc = ({ data }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const navigate = useNavigate();
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? data.images.length - 1 : prevIndex - 1))
-  }
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? data.images.length - 1 : prevIndex - 1
+    );
+  };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex === data.images.length - 1 ? 0 : prevIndex + 1))
-  }
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === data.images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
   const handleThumbnailClick = (index) => {
-    setCurrentImageIndex(index)
-  }
-  const navigate = useNavigate();
+    setCurrentImageIndex(index);
+  };
+
+  // When clicking on the profile image or username, navigate to /freelancer/<id>
+  const handleProfileClick = () => {
+    // Adjust the property name based on your data shape: data._id or data.id.
+    const freelancerId = data._id || data.id;
+    // Navigate only if a valid ID exists
+    if (freelancerId) {
+      navigate(`/freelancer/${freelancerId}`);
+    }
+  };
 
   return (
     <div className="gig-desc">
@@ -27,7 +40,14 @@ const GigDesc = ({ data }) => {
 
       <div className="horizontal-section-desc">
         <div className="profile-section-desc">
-          <a href="#" className="profile-link" onClick={()=>{navigate('/Freelancer')}}>
+          <a
+            href="#"
+            className="profile-link"
+            onClick={(e) => {
+              e.preventDefault();
+              handleProfileClick();
+            }}
+          >
             <img
               src={data.profilePicture || "/placeholder.svg"}
               alt={`Profil ${data.username}`}
@@ -47,7 +67,9 @@ const GigDesc = ({ data }) => {
           <span className="feedback-count">({data.feedbackCount})</span>
         </div>
 
-        <div className="queue-info">{data.queueCount} commandes en file d'attente</div>
+        <div className="queue-info">
+          {data.queueCount} commandes en file d'attente
+        </div>
       </div>
 
       <div className="carousel">
@@ -78,7 +100,7 @@ const GigDesc = ({ data }) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default GigDesc
+export default GigDesc;

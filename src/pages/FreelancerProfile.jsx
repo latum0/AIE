@@ -38,12 +38,9 @@ const FreelancerProfile = () => {
             `http://localhost:5000/api/users/${freelancerId}`
           );
         } else {
-          response = await fetch(
-            `http://localhost:5000/api/users/profile`,
-            {
-              credentials: "include",
-            }
-          );
+          response = await fetch(`http://localhost:5000/api/users/profile`, {
+            credentials: "include",
+          });
         }
 
         if (!response.ok) {
@@ -92,8 +89,10 @@ const FreelancerProfile = () => {
   // Scroll to section on tab change
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    const headerHeight = document.querySelector(".profile-header")?.offsetHeight || 0;
-    const navHeight = document.querySelector(".profile-nav")?.offsetHeight || 0;
+    const headerHeight =
+      document.querySelector(".profile-header")?.offsetHeight || 0;
+    const navHeight =
+      document.querySelector(".profile-nav")?.offsetHeight || 0;
     const totalOffset = headerHeight + navHeight;
 
     const refMap = {
@@ -122,8 +121,10 @@ const FreelancerProfile = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const headerHeight = document.querySelector(".profile-header")?.offsetHeight || 0;
-      const navHeight = document.querySelector(".profile-nav")?.offsetHeight || 0;
+      const headerHeight =
+        document.querySelector(".profile-header")?.offsetHeight || 0;
+      const navHeight =
+        document.querySelector(".profile-nav")?.offsetHeight || 0;
       const totalOffset = headerHeight + navHeight;
 
       const positions = {
@@ -181,7 +182,10 @@ const FreelancerProfile = () => {
           <div className="profile-info">
             <div className="profile-avatar-container">
               <img
-                src={profileData?.avatar || "/placeholder.svg?height=80&width=80"}
+                src={
+                  profileData?.avatar ||
+                  "/placeholder.svg?height=80&width=80"
+                }
                 alt="Profil"
                 className="profile-avatar"
               />
@@ -210,10 +214,12 @@ const FreelancerProfile = () => {
                   {profileData?.level || ""}
                 </span>
                 <span className="profile-location">
-                  <FaMapMarkerAlt /> {profileData?.location || "No Data"}
+                  <FaMapMarkerAlt />{" "}
+                  {profileData?.location || "No Data"}
                 </span>
                 <span className="profile-language">
-                  <FaGlobe /> {profileData?.language || "No Data"}
+                  <FaGlobe />{" "}
+                  {profileData?.language || "No Data"}
                 </span>
               </div>
               <p className="profile-status">
@@ -239,7 +245,11 @@ const FreelancerProfile = () => {
       {/* Content Sections */}
       <div className="profile-content">
         {/* About Section */}
-        <section id="about-me" ref={aboutRef} className="profile-section">
+        <section
+          id="about-me"
+          ref={aboutRef}
+          className="profile-section"
+        >
           <div className="about-section">
             <h2 className="section-title">À propos de moi</h2>
             <p className="about-text">
@@ -249,14 +259,17 @@ const FreelancerProfile = () => {
             <div className="skills-section">
               <h3 className="skills-title">Compétences</h3>
               <div className="skills-tags">
-                {profileData?.skills && profileData.skills.length > 0 ? (
+                {profileData?.skills &&
+                profileData.skills.length > 0 ? (
                   profileData.skills.map((skill, index) => (
                     <span key={index} className="skill-tag">
                       {skill}
                     </span>
                   ))
                 ) : (
-                  <span className="no-data">Aucune compétence trouvée.</span>
+                  <span className="no-data">
+                    Aucune compétence trouvée.
+                  </span>
                 )}
               </div>
             </div>
@@ -264,7 +277,11 @@ const FreelancerProfile = () => {
         </section>
 
         {/* Services Section */}
-        <section id="services" ref={gigsRef} className="profile-section">
+        <section
+          id="services"
+          ref={gigsRef}
+          className="profile-section"
+        >
           <div className="gigs-section">
             <h2 className="section-title">Mes Services</h2>
             <div className="gigs-container">
@@ -303,12 +320,20 @@ const FreelancerProfile = () => {
         </section>
 
         {/* Portfolio Section */}
-        <section id="portfolio" ref={portfolioRef} className="profile-section">
+        <section
+          id="portfolio"
+          ref={portfolioRef}
+          className="profile-section"
+        >
           <Portfolio hideHeader={true} />
         </section>
 
         {/* Reviews Section */}
-        <section id="reviews" ref={reviewsRef} className="profile-section">
+        <section
+          id="reviews"
+          ref={reviewsRef}
+          className="profile-section"
+        >
           <Reviews hideHeader={true} />
         </section>
       </div>
