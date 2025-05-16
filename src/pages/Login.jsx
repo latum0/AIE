@@ -26,7 +26,7 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(response.data.user));
       
       // Rediriger vers la page d'accueil
-      navigate("/");
+      navigate("/gigs");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de la connexion");
     } finally {

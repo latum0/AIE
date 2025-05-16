@@ -1,5 +1,5 @@
 "use client";
-
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import "./Gigspage.css";
 import { FaSearch, FaBell, FaEnvelope, FaHeart, FaStar } from "react-icons/fa";
@@ -17,7 +17,6 @@ function Gigspage() {
         
         const gigsData = await response.json();
 
-        // 🔹 Récupérer les informations des vendeurs liés aux gigs
         const usersMap = {};
         await Promise.all(
           gigsData.map(async (gig) => {
@@ -26,7 +25,7 @@ function Gigspage() {
                 const userResponse = await fetch(`http://localhost:5000/api/users/${gig.userId}`);
                 if (userResponse.ok) {
                   const userData = await userResponse.json();
-                  usersMap[gig.userId] = userData.name; // Stocke le nom réel de l'utilisateur
+                  usersMap[gig.userId] = userData.name;
                 }
               } catch (err) {
                 console.error(`Erreur en récupérant l'utilisateur ${gig.userId}`, err);
@@ -37,9 +36,8 @@ function Gigspage() {
 
         setUsers(usersMap);
 
-        // 🔹 Organiser les gigs par catégorie
         const categorized = gigsData.reduce((acc, gig) => {
-          const category = gig.categorie || "Autres"; // Utilisation du champ 'categorie' ajouté dans le modèle
+          const category = gig.categorie || "Autres";
           if (!acc[category]) acc[category] = [];
           acc[category].push(gig);
           return acc;
@@ -67,42 +65,54 @@ function Gigspage() {
     const sellerName = users[gig.userId] || "Utilisateur inconnu";
 
     return (
-      <div className="service-card" key={gig._id}>
-        <div className="service-image">
-          <img
-            src={gig.images?.[0] || "https://example.com/default-image.jpg"} // Utilisation du tableau 'images'
-            alt={gig.title}
-            className="service-img"
-          />
+      <Link 
+        to={`/gig/${gig._id}`} 
+        className="gigs-service-card-link"
+        key={gig._id}
+      >
+        <div className="gigs-service-card">
+          <div className="gigs-service-image">
+            <img
+              src={gig.images?.[0] || "/default-image.jpg"}
+              alt={gig.title}
+              className="gigs-service-img"
+            />
+          </div>
+          <div className="gigs-service-info">
+            <div className="gigs-seller-info">
+              <div className="gigs-seller-avatar">
+                {sellerName.charAt(0).toUpperCase()}
+              </div>
+              <div className="gigs-seller-details">
+                <div className="gigs-seller-name">{sellerName}</div>
+              </div>
+            </div>
+            <div className="gigs-service-title">{gig.title}</div>
+            <div className="gigs-service-rating">
+              <FaStar className="gigs-star-icon" />
+              <span className="gigs-rating-value">
+                {gig.rating || "N/A"}
+              </span>
+            </div>
+            <div className="gigs-service-footer">
+              <div className="gigs-service-actions">
+                <button
+                  className={`gigs-action-button heart ${isLiked ? "liked" : ""}`}
+                  onClick={(e) => handleLike(gig._id, e)}
+                >
+                  <FaHeart />
+                </button>
+              </div>
+              <div className="gigs-service-price">
+                <span className="gigs-starting-at">Prix:</span>
+                <span className="gigs-price">
+                  {gig.packages?.basic?.price?.toFixed(2) || "N/A"} DA
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="service-info">
-          <div className="seller-info">
-            <div className="seller-avatar">{sellerName.charAt(0).toUpperCase()}</div>
-            <div className="seller-details">
-              <div className="seller-name">{sellerName}</div>
-            </div>
-          </div>
-          <div className="service-title">{gig.title}</div>
-          <div className="service-rating">
-            <FaStar className="star-icon" />
-            <span className="rating-value">{gig.rating || "N/A"}</span>
-          </div>
-          <div className="service-footer">
-            <div className="service-actions">
-              <button 
-                className={`action-button heart ${isLiked ? "liked" : ""}`} 
-                onClick={(e) => handleLike(gig._id, e)}
-              >
-                <FaHeart />
-              </button>
-            </div>
-            <div className="service-price">
-              <span className="starting-at">Prix:</span>
-              <span className="price">${gig.packages?.basic?.price || "N/A"}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      </Link>
     );
   };
 
@@ -116,17 +126,19 @@ function Gigspage() {
   };
 
   return (
-    <div className="skill-market">
-      <main className="main-content">
+    <div className="gigs-skill-market">
+      <main className="gigs-main-content">
         {Object.keys(categorizedGigs).map(
           (category) =>
             categorizedGigs[category].length > 0 && (
-              <section className="section" key={category}>
-                <div className="section-header">
-                  <h2 className="section-title">{categoryTitles[category] || category}</h2>
+              <section className="gigs-section" key={category}>
+                <div className="gigs-section-header">
+                  <h2 className="gigs-section-title">
+                    {categoryTitles[category] || category}
+                  </h2>
                 </div>
-                <div className="services-container">
-                  <div className="services-scroll">
+                <div className="gigs-services-container">
+                  <div className="gigs-services-scroll">
                     {categorizedGigs[category].map((gig) => renderGigCard(gig))}
                   </div>
                 </div>

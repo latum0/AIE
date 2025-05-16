@@ -76,8 +76,9 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="formulaire-projet" element={<FormulaireProjet />} />
         <Route path="add-timeline" element={<AddTimelineAndBudget />} />
-        <Route path="gigspage" element={<Gigspage />} />
+        <Route path="gigs" element={<Gigspage />} />
         <Route path="gig" element={<Gig />} />
+        <Route path="gig/:id" element={<Gig />} />
       </Routes>
       <Footer />
     </>
