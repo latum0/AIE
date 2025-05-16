@@ -1,0 +1,70 @@
+.etapes-navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .etapes-navbar-steps {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .etape {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .step-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #ccc;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 24px;
+    margin-right: 6px;
+    transition: background-color 0.3s;
+  }
+  
+  .step-circle.active {
+    background-color: orange;
+  }
+  
+  .step-label {
+    font-size: 14px;
+    color: #999;
+    font-weight: 500;
+  }
+  
+  .step-label.active {
+    color: orange;
+  }
+  
+  .chevron {
+    color: #bbb;
+    font-size: 18px;
+    margin: 0 8px;
+    user-select: none;
+  }
+  
+  .exit-button {
+    font-size: 14px;
+    color: #777;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+  
+  .exit-button:hover {
+    color: #333;
+  }
+  

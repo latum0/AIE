@@ -1,0 +1,24 @@
+.select-categorie {
+    margin-bottom: 1rem;
+  }
+  
+  .select-categorie label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .select-categorie select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .icon {
+    color: #ff6600;
+    font-size: 1.2rem;
+  }
+  

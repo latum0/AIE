@@ -27,8 +27,8 @@ const SellerAbout = ({ data }) => {
               <span className="feedback-count">({data.feedbackCount})</span>
             </div>
           </div>
-
-          <button className="contact-button">Me contacter</button>
+          
+          <button className="contact-button">Me Contacter</button>
         </div>
       </div>
 
@@ -76,4 +76,4 @@ const SellerAbout = ({ data }) => {
   )
 }
 
-export default SellerAbout
+export default SellerAbout;

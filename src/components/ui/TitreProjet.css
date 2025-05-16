@@ -1,0 +1,24 @@
+.titre-projet {
+    margin-bottom: 1rem;
+  }
+  
+  .titre-projet label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .titre-projet input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .icon {
+    color: #ff6600;
+    font-size: 1.2rem;
+  }
+  

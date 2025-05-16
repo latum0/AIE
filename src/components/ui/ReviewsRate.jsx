@@ -67,4 +67,4 @@ const ReviewsRate = ({
   )
 }
 
-export default ReviewsRate
+export default ReviewsRate;

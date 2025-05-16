@@ -1,6 +1,7 @@
 import React from 'react';
 import './Hero.css';
 import { FiSearch } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -9,14 +10,16 @@ const Hero = () => {
         <div className="hero-content">
           <h1>Vous cherchez des freelances ?</h1>
           <p className="hero-subtitle">
-            Engagez les meilleurs talents en un clic. Spacelance vous connecte aux freelances experts en temps réel
+            Embauchez des freelances de qualité, rapidement. Spacelance vous aide à engager des freelances d’élite en un rien de temps.
           </p>
           <div className="hero-actions">
-            <button className="hire-btn">Engager un freelance</button>
+            <Link to="/formulaire-projet">
+              <button className="hire-btn">Engager un freelance</button>
+            </Link>
             <div className="search-container">
               <input 
                 type="text" 
-                placeholder="Rechercher une mission" 
+                placeholder="Rechercher un travail freelance" 
                 className="search-input"
               />
               <FiSearch className="search-icon" />
@@ -26,7 +29,7 @@ const Hero = () => {
         <div className="hero-image-container">
           <img 
             src="src/assets/icons/Hero.png" 
-            alt="Illustration freelances" 
+            alt="Illustration de freelances" 
             className="hero-image"
           />
         </div>

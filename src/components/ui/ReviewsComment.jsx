@@ -60,4 +60,4 @@ const ReviewsComment = ({ user, rating, content, helpfulVotes, response }) => {
   )
 }
 
-export default ReviewsComment
+export default ReviewsComment;
