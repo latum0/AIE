@@ -1,0 +1,30 @@
+.gigtitle-container {
+    margin-bottom: 24px;
+  }
+  
+  .gigtitle-container label {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .gigtitle-container p {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  
+  .gigtitle-container input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .char-count {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 4px;
+    text-align: right;
+  }
+  

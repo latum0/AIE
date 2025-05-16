@@ -1,0 +1,27 @@
+.bouton-continuer {
+    margin-top: 1.5rem;
+    text-align: right;
+  }
+  
+  .bouton-continuer button {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .bouton-continuer button:hover {
+    background-color: #e65c00;
+  }
+  
+  .icon {
+    font-size: 1rem;
+    color: rgb(15, 15, 15);
+  }
+  

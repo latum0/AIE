@@ -8,20 +8,20 @@ const Features = () => {
   const features = [
     {
       id: 1,
-      title: 'Create Account',
-      description: 'First you have to create a account here',
+      title: 'Créer un compte',
+      description: 'Vous devez d\'abord créer un compte ici',
       icon: lock
     },
     {
       id: 2,
-      title: 'Search work',
-      description: 'Search the best freelance work here',
+      title: 'Rechercher du travail',
+      description: 'Trouvez les meilleures missions freelance ici',
       icon: searchWork
     },
     {
       id: 3,
-      title: 'Save and apply',
-      description: 'Apply or save and start your work',
+      title: 'Enregistrer et postuler',
+      description: 'Postulez ou enregistrez pour commencer à travailler',
       icon: save
     }
   ];

@@ -1,0 +1,38 @@
+.tags-container {
+    margin-bottom: 32px;
+  }
+  
+  .tags-section {
+    margin-bottom: 16px;
+  }
+  
+  .tags-section label {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .tags-section p {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  
+  .tags-section input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .char-note {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 4px;
+  }
+  
+  .note-warning {
+    font-size: 12px;
+    color: #e55e00;
+  }
+  

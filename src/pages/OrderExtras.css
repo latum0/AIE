@@ -1,0 +1,261 @@
+/* OrderExtras.css */
+
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9fafb;
+}
+
+.conteneur-commande {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    flex: 1;
+}
+
+.grille-commande {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+}
+
+.contenu-principal {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.en-tete-service {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.miniature-service img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.info-service {
+    flex: 1;
+    min-width: 0;
+}
+
+.titre-service {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    word-break: break-word;
+}
+
+.evaluation-service {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    flex-wrap: wrap;
+}
+
+.etoiles {
+    color: #f59e0b;
+}
+
+.quantite-service {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    min-width: 120px;
+}
+
+.etiquette-quantite {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.selection-quantite {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    width: 100%;
+}
+
+.prix-base {
+    font-weight: 600;
+    font-size: 1.125rem;
+    white-space: nowrap;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.option-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.option-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.option-text {
+    flex: 1;
+}
+
+.option-label {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.option-badge {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    background-color: #dbeafe;
+    color: #1e40af;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.option-desc {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.option-price {
+    font-weight: 500;
+    white-space: nowrap;
+    margin-left: 1rem;
+    text-align: right;
+    min-width: 80px;
+}
+
+.barre-laterale {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+.resume-prix {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.titre-resume {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.ligne-resume {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: #4b5563;
+}
+
+.ligne-resume.total {
+    font-weight: 600;
+    color: #111827;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.separateur-resume {
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 1rem 0;
+}
+
+.bouton-paiement {
+    width: 100%;
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    margin-top: 1.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: center;
+}
+
+.bouton-paiement:hover {
+    background-color: #2563eb;
+}
+
+.avis-non-facturation {
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.info-paiement {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.methodes-paiement {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.icone-paiement {
+    font-size: 1.5rem;
+    color: #6b7280;
+}
+
+@media (max-width: 768px) {
+    .grille-commande {
+        grid-template-columns: 1fr;
+    }
+
+    .barre-laterale {
+        position: static;
+        margin-top: 2rem;
+    }
+
+    .en-tete-service {
+        flex-direction: column;
+    }
+
+    .quantite-service {
+        align-items: flex-start;
+        margin-top: 1rem;
+    }
+
+    .option-price {
+        margin-left: 1.75rem;
+    }
+}

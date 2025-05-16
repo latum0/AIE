@@ -8,7 +8,7 @@ import AddTimelineAndBudget from './pages/AddTimelineAndBudget';
 import Gig from './pages/Gig';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Test from './pages/Test';
+import Gigspage from './pages/Gigspage';
 import Histor from './pages/Histor';
 import Checkout from './pages/Checkout';
 // Import des composants freelancer
@@ -17,6 +17,7 @@ import ServicesList from './Freelancer/src/pages/ServicesList';
 import ServiceForm from './Freelancer/src/pages/ServiceForm';
 import OrderRequests from './Freelancer/src/pages/OrderRequests';
 import FreelancerShowcase from './Freelancer/src/pages/FreelancerShowcase';
+
 // Import des composants UI
 import Header from './components/ui/Header';
 import Footer from './components/ui/Footer';
@@ -75,6 +76,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="formulaire-projet" element={<FormulaireProjet />} />
         <Route path="add-timeline" element={<AddTimelineAndBudget />} />
+        <Route path="gigspage" element={<Gigspage />} />
         <Route path="gig" element={<Gig />} />
       </Routes>
       <Footer />

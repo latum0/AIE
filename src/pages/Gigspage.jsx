@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import "./Test.css";
+import "./Gigspage.css";
 import { FaSearch, FaBell, FaEnvelope, FaHeart, FaStar } from "react-icons/fa";
 
-function Test() {
+function Gigspage() {
   const [categorizedGigs, setCategorizedGigs] = useState({});
   const [likedGigs, setLikedGigs] = useState({});
   const [users, setUsers] = useState({});
@@ -138,4 +138,4 @@ function Test() {
   );
 }
 
-export default Test;
+export default Gigspage;

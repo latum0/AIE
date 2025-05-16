@@ -1,0 +1,174 @@
+.submit-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9fafb;
+}
+
+.submit-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Message de succès */
+.success-message {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: #10b981;
+    margin-bottom: 1rem;
+}
+
+.success-message h1 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.success-message p {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* Récapitulatif */
+.order-summary {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.order-summary h2 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.order-details {
+    display: grid;
+    gap: 1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.amount {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.status {
+    background: #fef9c3;
+    color: #854d0e;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Étapes suivantes */
+.next-steps {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.next-steps h2 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+
+.step {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+    align-items: flex-start;
+}
+
+.step-icon {
+    font-size: 1.5rem;
+    color: #3b82f6;
+    margin-top: 0.3rem;
+}
+
+.step h3 {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 0.3rem;
+}
+
+.step p {
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* Bouton */
+.home-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.home-button:hover {
+    background: #2563eb;
+}
+
+.button-icon {
+    font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .submit-page {
+        padding-top: 70px;
+    }
+
+    .submit-container {
+        padding: 1.5rem;
+    }
+
+    .success-message,
+    .order-summary,
+    .next-steps {
+        padding: 1.5rem;
+    }
+
+    .home-button {
+        max-width: 100%;
+    }
+}

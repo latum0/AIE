@@ -24,14 +24,14 @@ const ReviewsRate = ({
               />
             ))}
           </div>
-          <div className="total-reviews">{totalReviews} reviews</div>
+          <div className="total-reviews">{totalReviews} avis</div>
         </div>
       </div>
 
       <div className="breakdown-section">
         {starCounts.map((count, index) => (
           <div key={index} className="star-breakdown-row">
-            <div className="star-label">{5 - index} Stars</div>
+            <div className="star-label">{5 - index} étoiles</div>
             <div className="progress-container">
               <div 
                 className="progress-bar"

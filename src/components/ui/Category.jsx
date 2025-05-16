@@ -3,20 +3,20 @@ import './Category.css';
 
 const Category = () => {
   const categories = [
-    { name: 'Graphic & Design', image: 'src/assets/icons/graphic.png' },
-    { name: 'Cartoon Animation', image: 'src/assets/icons/animation.png' },
+    { name: 'Graphisme & Design', image: 'src/assets/icons/graphic.png' },
+    { name: 'Animation de Dessin Animé', image: 'src/assets/icons/animation.png' },
     { name: 'Illustration', image: 'src/assets/icons/illustration.png' },
-    { name: 'Flyers & Vouchers', image: 'src/assets/icons/vouchers.png' },
-    { name: 'Logo Design', image: 'src/assets/icons/logoCat.png' },
-    { name: 'Social Graphics', image: 'src/assets/icons/social.png' },
-    { name: 'Article Writing', image: 'src/assets/icons/article.png' },
-    { name: 'Video Editing', image: 'src/assets/icons/videoEditing.png' }
+    { name: 'Flyers & Chèques-Cadeaux', image: 'src/assets/icons/vouchers.png' },
+    { name: 'Conception de Logo', image: 'src/assets/icons/logoCat.png' },
+    { name: 'Graphismes pour Réseaux Sociaux', image: 'src/assets/icons/social.png' },
+    { name: 'Rédaction d\'Articles', image: 'src/assets/icons/article.png' },
+    { name: 'Montage Vidéo', image: 'src/assets/icons/videoEditing.png' }
   ];
 
   return (
     <div className="category-container">
       <h2 className="section-title">
-        Choose Different <span className="highlight">Category</span>
+        Choisissez une <span className="highlight">Catégorie</span> Différente
       </h2>
       <div className="category-grid">
         {categories.map((category, index) => (
@@ -32,7 +32,7 @@ const Category = () => {
           </div>
         ))}
       </div>
-      <button className="more-btn">More Categories</button>
+      <button className="more-btn">Plus de catégories</button>
     </div>
   );
 };
