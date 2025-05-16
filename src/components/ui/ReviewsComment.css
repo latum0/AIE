@@ -1,123 +1,155 @@
-.review-container {
+.review-comment-container {
+  padding: 30px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.review-user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.review-avatar {
+  flex-shrink: 0;
+}
+
+.review-avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f0f0f0;
+}
+
+.review-details {
+  flex-grow: 1;
+}
+
+.review-name {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.review-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.review-flag {
+  width: 20px;
+  height: auto;
+  border-radius: 2px;
+}
+
+.review-rating-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0 15px 0;
+}
+
+.review-star {
+  color: #e0e0e0;
+  font-size: 20px;
+}
+
+.review-star.filled {
+  color: gold;
+}
+
+.review-timestamp {
+  color: #999;
+  font-size: 0.9rem;
+  margin-left: 10px;
+}
+
+.review-content {
+  line-height: 1.6;
+  color: #444;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.review-helpful-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.review-helpful-text {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.review-vote-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.3s;
+  padding: 8px 15px;
+  font-size: 0.9rem;
+}
+
+.review-vote-btn:hover {
+  background-color: #f8f8f8;
+  color: #333;
+  border-color: #ccc;
+}
+
+.review-seller-response {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-top: 20px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 20px;
+}
+
+.review-response-content {
+  flex-grow: 1;
+}
+
+.review-header {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.review-message {
+  color: #555;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .review-comment-container {
     padding: 20px;
-    border-top: 1px solid #f0f0f0;
-    border-bottom: 1px solid #f0f0f0;
-    margin-bottom: 20px;
-    width: 100%;
-    box-sizing: border-box;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-    max-width: 1200px;
-    margin: 0 auto;
   }
-  
-  .user-info {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 10px;
+
+  .review-helpful-section {
+    flex-wrap: wrap;
   }
-  
-  .avatar {
-    flex-shrink: 0;
+
+  .review-vote-btn {
+    padding: 6px 12px;
   }
-  
-  .avatar img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .details {
-    flex-grow: 1;
-  }
-  
-  .details .name {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .details .location {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #666;
-  }
-  
-  .rating-section {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 15px 0;
-  }
-  
-  .star {
-    color: #E0E0E0;
-    font-size: 18px;
-  }
-  
-  .star.filled {
-    color: gold;
-  }
-  
-  .timestamp {
-    color: #999;
-    font-size: 0.9rem;
-  }
-  
-  .content {
-    grid-column: 1 / -1;
-    line-height: 1.6;
-    color: #555;
-    margin-bottom: 20px;
-  }
-  
-  .helpful-section {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .vote-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: #666;
-    transition: color 0.3s;
-    padding: 5px 10px;
-  }
-  
-  .vote-btn:hover {
-    color: #333;
-  }
-  
-  .seller-response {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-top: 20px;
-    border-top: 1px solid #f0f0f0;
-    padding-top: 20px;
-  }
-  
-  .response-content {
-    flex-grow: 1;
-  }
-  
-  .response-content .header {
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-  }
-  
-  .response-content .message {
-    color: #555;
-    line-height: 1.6;
-  }
+}
