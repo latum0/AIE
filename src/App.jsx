@@ -17,12 +17,15 @@ import FormulaireProjet from './pages/FormulaireProjet';
 import AddTimelineAndBudget from './pages/AddTimelineAndBudget';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-
-// Freelancer pages (from the pulled file)
+import Gigspage from './pages/Gigspage';
+import Histor from './pages/Histor';
+import Checkout from './pages/Checkout';
+// Import des composants freelancer
 import Dashboard from './Freelancer/src/pages/Dashboard';
 import ServicesList from './Freelancer/src/pages/ServicesList';
 import ServiceForm from './Freelancer/src/pages/ServiceForm';
 import OrderRequests from './Freelancer/src/pages/OrderRequests';
+import FreelancerShowcase from './Freelancer/src/pages/FreelancerShowcase';
 
 // UI components
 import Header from './components/ui/Header';
@@ -100,6 +103,9 @@ function App() {
       </OrdersProvider>
     </ServicesProvider>
   );
+
+  // Layout pour la partie client
+  
 
   return (
     <Router>

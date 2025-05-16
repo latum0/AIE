@@ -1,0 +1,22 @@
+.category-navbar {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.8rem 10rem;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+    overflow-x: auto;
+    justify-content: center;
+  }
+  
+  .category-navbar a {
+    text-decoration: none;
+    color: #62646A;
+    white-space: nowrap;
+  }
+  
+  .category-navbar a:hover {
+    color: #FF8C42;
+    font-weight: 500;
+  }
+  
