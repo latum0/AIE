@@ -1,20 +1,99 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+// Import des composants clients
 import Home from './pages/Home';
-import './App.css';
+import FormulaireProjet from './pages/FormulaireProjet';
+import AddTimelineAndBudget from './pages/AddTimelineAndBudget';
+import Gig from './pages/Gig';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Test from './pages/Test';
+import Histor from './pages/Histor';
+import Checkout from './pages/Checkout';
+// Import des composants freelancer
+import Dashboard from './Freelancer/src/pages/Dashboard';
+import ServicesList from './Freelancer/src/pages/ServicesList';
+import ServiceForm from './Freelancer/src/pages/ServiceForm';
+import OrderRequests from './Freelancer/src/pages/OrderRequests';
+import FreelancerShowcase from './Freelancer/src/pages/FreelancerShowcase';
+// Import des composants UI
 import Header from './components/ui/Header';
 import Footer from './components/ui/Footer';
-import Gig from './pages/Gig';
+import Sidebar from './Freelancer/src/components/navigation/Sidebar';
+import MobileNavigation from './Freelancer/src/components/navigation/MobileNavigation';
+import FreelancerHeader from './Freelancer/src/components/common/Header';
+
+// Import des providers
+import { ServicesProvider } from './Freelancer/src/context/ServicesContext';
+import { OrdersProvider } from './Freelancer/src/context/OrdersContext';
+
+// Import des styles
+import './App.css';
+import './Freelancer/src/pages/Dashboard.css';
 
 function App() {
-  return (
-    <div >
-      {/*<Gig/>*/}
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-     <Header/>
-      
-      <Home/>
-      <Footer/>
-    </div>
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  // Layout pour la partie freelancer
+  const FreelancerLayout = () => (
+    <ServicesProvider>
+      <OrdersProvider>
+        <div className="app">
+          <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+          <div className="main-content">
+            <FreelancerHeader toggleSidebar={toggleSidebar} />
+            <div className="page-container">
+              <Routes>
+                <Route index element={<Dashboard />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="services" element={<ServicesList />} />
+                <Route path="services/new" element={<ServiceForm />} />
+                <Route path="services/edit/:id" element={<ServiceForm />} />
+                <Route path="orders" element={<OrderRequests />} />
+              </Routes>
+            </div>
+          </div>
+          <MobileNavigation />
+        </div>
+      </OrdersProvider>
+    </ServicesProvider>
+  );
+
+  // Layout pour la partie client
+  const ClientLayout = () => (
+    <>
+      <Header toggleSidebar={toggleSidebar} />
+      <Routes>
+        <Route index element={<Home />} />
+        <Route path="home" element={<Home />} />
+       <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="formulaire-projet" element={<FormulaireProjet />} />
+        <Route path="add-timeline" element={<AddTimelineAndBudget />} />
+        <Route path="gig" element={<Gig />} />
+      </Routes>
+      <Footer />
+    </>
+  );
+
+  return (
+    <Router>
+      <Routes>
+        {/* Routes Client - accessible via /* */}
+        <Route path="/*" element={<ClientLayout />} />
+        
+        {/* Routes Freelancer - accessible via /freelancer/* */}
+        <Route path="/freelancer/*" element={<FreelancerLayout />} />
+        
+        {/* Redirection par défaut */}
+        <Route path="/" element={<Navigate to="/home" replace />} />
+      </Routes>
+    </Router>
   );
 }
 
