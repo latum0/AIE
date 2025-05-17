@@ -25,9 +25,9 @@ const Header = ({ toggleSidebar }) => {
   return (
     <header className="header">
       <div className="header-content">
-        <Link to={isLoggedIn ? '/dashboard' : '/home'}>
+        <Link to={isLoggedIn ? '/gigs' : '/home'}>
           <img 
-            src="/src/assets/icons/logoMC.png" 
+            src="/src/assets/icons/Untitled-12.png" 
             alt="Logo" 
             className="logo"
           />

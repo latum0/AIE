@@ -79,6 +79,8 @@ function App() {
         <Route path="gigs" element={<Gigspage />} />
         <Route path="gig" element={<Gig />} />
         <Route path="gig/:id" element={<Gig />} />
+        <Route path="/gig/:id" element={<Gig />} />
+        <Route path="/checkout/:gigId" element={<Checkout />} />
       </Routes>
       <Footer />
     </>
