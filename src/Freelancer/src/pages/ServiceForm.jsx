@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -12,9 +12,8 @@ export default function ServiceForm() {
     title: "",
     description: "", // Gig-level description field
     category: "",
-    // We'll store image file objects here until they are uploaded to Cloudinary.
     images: [],
-    // Use "includedServices" to match your Gig model.
+    // Package details for your gig/service
     basic: {
       title: "",
       description: "",
@@ -81,7 +80,7 @@ export default function ServiceForm() {
     });
   };
 
-  // Handle image selection. We store each file (with preview URL) locally.
+  // Handle image selection. Each file is stored with a preview URL for immediate display.
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const newImages = files.map((file) => ({
@@ -111,7 +110,7 @@ export default function ServiceForm() {
       const token = localStorage.getItem("accessToken");
 
       // STEP 1: Upload each image individually to Cloudinary via the /upload endpoint.
-      // Your upload route (uploadRoutes.js) expects a file with key "file" and returns { url: result.secure_url }
+      // Removing "Content-Type" here is crucial so that axios automatically sets the correct multipart boundary.
       const uploadPromises = formData.images.map((img) => {
         const imageFormData = new FormData();
         imageFormData.append("file", img.file);
@@ -119,14 +118,14 @@ export default function ServiceForm() {
           .post("/upload", imageFormData, {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
+              // Removed "Content-Type": "multipart/form-data" to allow automatic header formation.
             },
           })
           .then((res) => res.data.url);
       });
       const imageUrls = await Promise.all(uploadPromises);
 
-      // STEP 2: Prepare the gig payload using the secure URLs for images.
+      // STEP 2: Prepare the gig payload using the returned secure URLs for images.
       const gigPayload = {
         title: formData.title,
         description: formData.description,
@@ -139,8 +138,7 @@ export default function ServiceForm() {
         images: imageUrls,
       };
 
-      // Send the gig data as JSON. Since Axios base URL is "http://localhost:5000/api",
-      // posting to "/gigs" targets "http://localhost:5000/api/gigs".
+      // Since the Axios base URL is set to "http://localhost:5000/api", posting to "/gigs" targets "http://localhost:5000/api/gigs".
       const response = await axios.post("/gigs", gigPayload, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -177,7 +175,9 @@ export default function ServiceForm() {
             type="text"
             placeholder={`Titre du forfait ${packageTitle.toLowerCase()}`}
             value={packageData.title}
-            onChange={(e) => handlePackageChange(packageType, "title", e.target.value)}
+            onChange={(e) =>
+              handlePackageChange(packageType, "title", e.target.value)
+            }
           />
         </div>
         <div className="form-group">
@@ -189,7 +189,9 @@ export default function ServiceForm() {
             className="form-control"
             placeholder={`Décrivez ce qui est inclus dans votre forfait ${packageTitle.toLowerCase()}`}
             value={packageData.description}
-            onChange={(e) => handlePackageChange(packageType, "description", e.target.value)}
+            onChange={(e) =>
+              handlePackageChange(packageType, "description", e.target.value)
+            }
           />
           <p className="hint">Soyez précis sur ce que les clients recevront</p>
         </div>
@@ -205,7 +207,9 @@ export default function ServiceForm() {
               min="1"
               placeholder="ex. 3"
               value={packageData.deliveryTime}
-              onChange={(e) => handlePackageChange(packageType, "deliveryTime", e.target.value)}
+              onChange={(e) =>
+                handlePackageChange(packageType, "deliveryTime", e.target.value)
+              }
             />
           </div>
           <div className="form-group half">
@@ -219,7 +223,9 @@ export default function ServiceForm() {
               min="0"
               placeholder="ex. 2"
               value={packageData.revisions}
-              onChange={(e) => handlePackageChange(packageType, "revisions", e.target.value)}
+              onChange={(e) =>
+                handlePackageChange(packageType, "revisions", e.target.value)
+              }
             />
           </div>
         </div>
@@ -241,7 +247,9 @@ export default function ServiceForm() {
                 type="text"
                 placeholder={`Inclusion ${index + 1}`}
                 value={service}
-                onChange={(e) => handleServiceChange(packageType, index, e.target.value)}
+                onChange={(e) =>
+                  handleServiceChange(packageType, index, e.target.value)
+                }
               />
               <button
                 type="button"

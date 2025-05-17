@@ -3,121 +3,42 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Header.css';
 
-// Configure axios (ideally in a separate file)
-const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
-});
-
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
-
-  // Manage authentication state
-  const [authState, setAuthState] = React.useState({
-    isLoggedIn: false,
-    user: null,
-    isLoading: true
-  });
-
-  React.useEffect(() => {
-    const checkAuth = () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        const userData = localStorage.getItem('user');
-
-        setAuthState({
-          isLoggedIn: !!token,
-          // Adjust to use either _id or id depending on your API
-          user: userData ? JSON.parse(userData) : null,
-          isLoading: false
-        });
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        setAuthState({
-          isLoggedIn: false,
-          user: null,
-          isLoading: false
-        });
-      }
-    };
-
-    checkAuth();
-    window.addEventListener('storage', checkAuth);
-
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
 
   const handleLogout = async () => {
     try {
-      await api.post(
-        '/auth/logout',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        }
-      );
+      // If your backend provides a logout endpoint, call it:
+      await axios.post('http://localhost:5000/api/auth/logout');
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Erreur lors de la déconnexion:', error);
     } finally {
+      // Clear authentication data
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
-
-      setAuthState({
-        isLoggedIn: false,
-        user: null,
-        isLoading: false
-      });
-
+      // Redirect to login page
       navigate('/login');
     }
   };
 
-  if (authState.isLoading) {
-    return <header className="header">Chargement...</header>;
-  }
-
   return (
     <header className="header">
       <div className="header-content">
-        <Link to={authState.isLoggedIn ? '/dashboard' : '/home'}>
+        <Link to={isLoggedIn ? '/dashboard' : '/home'}>
           <img 
             src="/src/assets/icons/logoMC.png" 
             alt="Logo" 
             className="logo"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = '/path/to/default/logo.png';
-            }}
           />
         </Link>
-        
         <nav className="nav-links">
-          {authState.isLoggedIn ? (
-            <>
-              {/* Navigate dynamically to the freelancer dashboard using the user id */}
-              <Link 
-                to={`/freelancer/${authState.user._id || authState.user.id}/dashboard`}
-                className="seller-link"
-              >
-                Freelancer
-              </Link>
-              
-              <div className="user-menu">
-                <Link to="/profile" className="profile-link">
-                  <span>Mon compte</span>
-                </Link>
-                <button 
-                  onClick={handleLogout} 
-                  className="logout-btn"
-                  aria-label="Déconnexion"
-                >
-                  Déconnexion
-                </button>
-              </div>
-            </>
-          ) : (
+          <Link to="/freelancer" className="seller-link">
+            Devenir freelancer
+          </Link>
+          {!isLoggedIn ? (
             <>
               <Link to="/login" className="signin-link">
                 Se connecter
@@ -126,6 +47,15 @@ const Header = ({ toggleSidebar }) => {
                 S'inscrire
               </Link>
             </>
+          ) : (
+            <div className="user-menu">
+              <Link to="/profile" className="profile-link">
+                <span>Mon compte</span>
+              </Link>
+              <button onClick={handleLogout} className="logout-btn">
+                Déconnexion
+              </button>
+            </div>
           )}
         </nav>
       </div>
