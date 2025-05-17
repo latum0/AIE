@@ -5,6 +5,7 @@
   padding: 40px 20px;
   gap: 40px;
   background-color: #f9f9f9;
+  min-height: 800px; /* Added fixed minimum height */
 }
 
 .left-column {
@@ -13,6 +14,7 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+  min-height: 800px; /* Added to ensure consistency */
 }
 
 .right-column {
@@ -23,6 +25,7 @@
   align-self: flex-start;
   position: sticky;
   top: 20px;
+  min-height: 800px; /* Added to keep right column consistent */
 }
 
 .contact-seller {
@@ -45,7 +48,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* CardService styling */
+/* CardService styling remains the same */
 .card-service {
   background: white;
   border-radius: 12px;
@@ -133,7 +136,7 @@
   .gig-container {
     padding: 20px 10px;
   }
-
+  
   .contact-seller {
     padding: 14px 20px;
   }

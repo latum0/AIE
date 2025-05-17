@@ -1,9 +1,11 @@
-import { useNavigate, NavLink } from 'react-router-dom';
+// src/Freelancer/src/components/navigation/Sidebar.jsx
+import { useNavigate, NavLink, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
+  const { userId } = useParams();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         
         <nav className="sidebar-nav">
           <NavLink 
-            to="/" 
+            to={`/freelancer/${userId}/dashboard`} 
             className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
             onClick={isMobile ? toggleSidebar : undefined}
           >
@@ -47,7 +49,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </NavLink>
           
           <NavLink 
-            to="/freelancer/services" 
+            to={`/freelancer/${userId}/services`} 
             className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
             onClick={isMobile ? toggleSidebar : undefined}
           >
@@ -56,7 +58,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </NavLink>
           
           <NavLink 
-            to="/freelancer/orders" 
+            to={`/freelancer/${userId}/orders`} 
             className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
             onClick={isMobile ? toggleSidebar : undefined}
           >
@@ -69,7 +71,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <button 
             className="btn btn-accent btn-block"
             onClick={() => {
-              navigate('/freelancer/services/new');
+              navigate(`/freelancer/${userId}/services/new`);
               if (isMobile) toggleSidebar();
             }}
           >

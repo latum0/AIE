@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React , { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ServicesContext } from '../context/ServicesContext';
 import { OrdersContext } from '../context/OrdersContext';
@@ -21,6 +21,14 @@ const Dashboard = () => {
   const recentOrders = [...orders]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
+
+    const isLoggedIn = !!localStorage.getItem("token");
+
+if (isLoggedIn) {
+  console.log("User is logged in");
+} else {
+  console.log("User is not logged in");
+}
   
   return (
     <div className="dashboard">

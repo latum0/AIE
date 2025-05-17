@@ -3,15 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Header.css';
 
-// Configurez axios une fois (à mettre dans un fichier séparé idéalement)
+// Configure axios (ideally in a separate file)
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
 });
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
-  
-  // Gestion plus sécurisée des données utilisateur
+
+  // Manage authentication state
   const [authState, setAuthState] = React.useState({
     isLoggedIn: false,
     user: null,
@@ -23,9 +23,10 @@ const Header = ({ toggleSidebar }) => {
       try {
         const token = localStorage.getItem('accessToken');
         const userData = localStorage.getItem('user');
-        
+
         setAuthState({
           isLoggedIn: !!token,
+          // Adjust to use either _id or id depending on your API
           user: userData ? JSON.parse(userData) : null,
           isLoading: false
         });
@@ -41,32 +42,34 @@ const Header = ({ toggleSidebar }) => {
 
     checkAuth();
     window.addEventListener('storage', checkAuth);
-    
+
     return () => window.removeEventListener('storage', checkAuth);
   }, []);
 
   const handleLogout = async () => {
     try {
-      await api.post('/auth/logout', {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      await api.post(
+        '/auth/logout',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
         }
-      });
+      );
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Nettoyage complet
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
-      
-      // Reset l'état
+
       setAuthState({
         isLoggedIn: false,
         user: null,
         isLoading: false
       });
-      
+
       navigate('/login');
     }
   };
@@ -84,7 +87,7 @@ const Header = ({ toggleSidebar }) => {
             alt="Logo" 
             className="logo"
             onError={(e) => {
-              e.target.onerror = null; 
+              e.target.onerror = null;
               e.target.src = '/path/to/default/logo.png';
             }}
           />
@@ -93,13 +96,17 @@ const Header = ({ toggleSidebar }) => {
         <nav className="nav-links">
           {authState.isLoggedIn ? (
             <>
-              <Link to="/freelancer" className="seller-link">
+              {/* Navigate dynamically to the freelancer dashboard using the user id */}
+              <Link 
+                to={`/freelancer/${authState.user._id || authState.user.id}/dashboard`}
+                className="seller-link"
+              >
                 Freelancer
               </Link>
               
               <div className="user-menu">
-               <Link to="/profile" className="profile-link">
-                  <span>Mon compte</span> {/* Changement ici */}
+                <Link to="/profile" className="profile-link">
+                  <span>Mon compte</span>
                 </Link>
                 <button 
                   onClick={handleLogout} 

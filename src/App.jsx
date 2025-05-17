@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
@@ -28,6 +29,7 @@ import FreelancerShowcase from './Freelancer/src/pages/FreelancerShowcase';
 // UI components
 import Header from './components/ui/Header';
 import Footer from './components/ui/Footer';
+
 // Freelancer UI components
 import Sidebar from './Freelancer/src/components/navigation/Sidebar';
 import MobileNavigation from './Freelancer/src/components/navigation/MobileNavigation';
@@ -77,7 +79,7 @@ function App() {
     </>
   );
 
-  // Freelancer layout: includes sidebar, header, and freelancer routes.
+  // Freelancer layout using the dynamic userId parameter
   const FreelancerLayout = () => (
     <ServicesProvider>
       <OrdersProvider>
@@ -87,7 +89,6 @@ function App() {
             <FreelancerHeader toggleSidebar={toggleSidebar} />
             <div className="page-container">
               <Routes>
-                <Route index element={<Dashboard />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="services" element={<ServicesList />} />
                 <Route path="services/new" element={<ServiceForm />} />
@@ -105,9 +106,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Freelancer routes */}
-        <Route path="/freelancer/*" element={<FreelancerLayout />} />
-        {/* All other routes use the client layout */}
+        {/* Freelancer routes with dynamic userId */}
+        <Route path="/freelancer/:userId/*" element={<FreelancerLayout />} />
+        {/* Client routes */}
         <Route path="/*" element={<ClientLayout />} />
       </Routes>
     </Router>

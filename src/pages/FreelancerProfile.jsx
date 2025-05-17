@@ -14,8 +14,11 @@ import "./FreelancerProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
 
 const FreelancerProfile = () => {
-  // Use the "id" parameter since your route is defined as /freelancerProfile/:id
+  // Retrieve the route parameter and force it to a string
   const { id } = useParams();
+  const profileId = id ? (typeof id === "string" ? id : id.toString()) : "";
+  console.log("FreelancerProfile - Route param id:", profileId);
+
   const [activeTab, setActiveTab] = useState("À propos");
   const [profileData, setProfileData] = useState(null);
   const [gigsData, setGigsData] = useState([]);
@@ -29,13 +32,13 @@ const FreelancerProfile = () => {
 
   const navigate = useNavigate();
 
-  // Fetch profile data (if an 'id' exists, fetch that user's data; otherwise, fetch current user's profile)
+  // Fetch profile data (public endpoint if profileId is provided)
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         let response;
-        if (id) {
-          response = await fetch(`http://localhost:5000/api/users/${id}`);
+        if (profileId) {
+          response = await fetch(`http://localhost:5000/api/users/${profileId}`);
         } else {
           response = await fetch(`http://localhost:5000/api/users/profile`, {
             credentials: "include",
@@ -45,6 +48,7 @@ const FreelancerProfile = () => {
           throw new Error("Failed to fetch profile data.");
         }
         const data = await response.json();
+        console.log("FreelancerProfile - Fetched profile data:", data);
         setProfileData(data);
         setLoading(false);
       } catch (err) {
@@ -54,22 +58,24 @@ const FreelancerProfile = () => {
       }
     };
     fetchProfile();
-  }, [id]);
+  }, [profileId]);
 
-  // Fetch gigs data for the freelancer
+  // Fetch gigs for the freelancer
   useEffect(() => {
     const fetchGigs = async () => {
       try {
-        // Use the fetched profile id or the URL parameter 'id'
-        const userId = profileData?._id || id;
+        const userId =
+          profileData?._id
+            ? (typeof profileData._id === "string" ? profileData._id : profileData._id.toString())
+            : profileId;
+        console.log("FreelancerProfile - Fetching gigs for userId:", userId);
         if (!userId) return;
-        const response = await fetch(
-          `http://localhost:5000/api/gigs/freelancer/${userId}`
-        );
+        const response = await fetch(`http://localhost:5000/api/gigs/freelancer/${userId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch gigs data.");
         }
         const gigs = await response.json();
+        console.log("FreelancerProfile - Fetched gigs data:", gigs);
         setGigsData(gigs);
       } catch (err) {
         setError(err.message);
@@ -77,10 +83,10 @@ const FreelancerProfile = () => {
       }
     };
 
-    if (id || profileData) {
+    if (profileId || profileData) {
       fetchGigs();
     }
-  }, [profileData, id]);
+  }, [profileData, profileId]);
 
   // Scroll to section on tab change
   const handleTabChange = (tab) => {
@@ -107,7 +113,7 @@ const FreelancerProfile = () => {
     }
   };
 
-  // Navigate to conversation (this remains unchanged)
+  // Navigate to conversation page
   const handleContact = () => {
     navigate("/conversation");
   };
@@ -135,7 +141,6 @@ const FreelancerProfile = () => {
       const active = sortedPositions.find(
         ([, pos]) => scrollPosition >= pos
       )?.[0];
-
       if (active) setActiveTab(active);
     };
 
@@ -158,37 +163,23 @@ const FreelancerProfile = () => {
                 alt="Profil"
                 className="profile-avatar"
               />
-              <div
-                className={`status-indicator ${
-                  profileData?.isOnline ? "online" : "offline"
-                }`}
-              ></div>
+              <div className={`status-indicator ${profileData?.isOnline ? "online" : "offline"}`}></div>
             </div>
             <div className="profile-details">
-              <h1 className="profile-name">
-                {profileData?.name || "No Data"}
-              </h1>
-              <div className="profile-username">
-                {profileData?.username || ""}
-              </div>
+              <h1 className="profile-name">{profileData?.name || "No Data"}</h1>
+              <div className="profile-username">{profileData?.username || ""}</div>
               <div className="profile-rating">
                 <FaStar className="star-icon" />{" "}
                 {profileData?.rating?.toFixed(1) || "N/A"}
-                <span className="reviews-count">
-                  ({profileData?.reviews || 0} avis)
-                </span>
+                <span className="reviews-count">({profileData?.reviews || 0} avis)</span>
               </div>
               <div className="profile-meta">
-                <span className="profile-level">
-                  {profileData?.level || ""}
-                </span>
+                <span className="profile-level">{profileData?.level || ""}</span>
                 <span className="profile-location">
-                  <FaMapMarkerAlt />{" "}
-                  {profileData?.location || "No Data"}
+                  <FaMapMarkerAlt /> {profileData?.location || "No Data"}
                 </span>
                 <span className="profile-language">
-                  <FaGlobe />{" "}
-                  {profileData?.language || "No Data"}
+                  <FaGlobe /> {profileData?.language || "No Data"}
                 </span>
               </div>
               <p className="profile-status">
@@ -201,8 +192,7 @@ const FreelancerProfile = () => {
               <FaEnvelope className="message-icon" /> Me contacter
             </button>
             <p className="response-time">
-              Temps de réponse moyen :{" "}
-              {profileData?.responseTime || "No Data"}
+              Temps de réponse moyen : {profileData?.responseTime || "No Data"}
             </p>
           </div>
         </div>
@@ -231,11 +221,7 @@ const FreelancerProfile = () => {
       {/* Content Sections */}
       <div className="profile-content">
         {/* About Section */}
-        <section
-          id="about-me"
-          ref={aboutRef}
-          className="profile-section"
-        >
+        <section id="about-me" ref={aboutRef} className="profile-section">
           <div className="about-section">
             <h2 className="section-title">À propos de moi</h2>
             <p className="about-text">
@@ -262,17 +248,17 @@ const FreelancerProfile = () => {
         </section>
 
         {/* Services Section */}
-        <section
-          id="services"
-          ref={gigsRef}
-          className="profile-section"
-        >
+        <section id="services" ref={gigsRef} className="profile-section">
           <div className="gigs-section">
             <h2 className="section-title">Mes Services</h2>
             <div className="gigs-container">
               {gigsData.length > 0 ? (
                 gigsData.map((gig) => (
-                  <div key={gig._id} className="gig-card">
+                  <div
+                    key={gig._id}
+                    className="gig-card"
+                    onClick={() => navigate(`/gig/${gig._id}`)}
+                  >
                     <div className="gig-image-container">
                       <img
                         src={gig.image || "/placeholder.svg"}
@@ -305,20 +291,12 @@ const FreelancerProfile = () => {
         </section>
 
         {/* Portfolio Section */}
-        <section
-          id="portfolio"
-          ref={portfolioRef}
-          className="profile-section"
-        >
+        <section id="portfolio" ref={portfolioRef} className="profile-section">
           <Portfolio hideHeader={true} />
         </section>
 
         {/* Reviews Section */}
-        <section
-          id="reviews"
-          ref={reviewsRef}
-          className="profile-section"
-        >
+        <section id="reviews" ref={reviewsRef} className="profile-section">
           <Reviews hideHeader={true} />
         </section>
       </div>
