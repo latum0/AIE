@@ -35,8 +35,11 @@ const Header = ({ toggleSidebar }) => {
           />
         </Link>
         <nav className="nav-links">
-          <Link to="/freelancer" className="seller-link">
-            Devenir freelancer
+          <Link 
+            to={user ? `/freelancer/${user._id || user.id}/dashboard` : '/freelancer'}
+            className="seller-link"
+          >
+            Freelancer
           </Link>
           {!isLoggedIn ? (
             <>

@@ -13,7 +13,7 @@ export default function ServiceForm() {
     description: "", // Gig-level description field
     category: "",
     images: [],
-    // Package details for your gig/service
+    // We'll store package details here
     basic: {
       title: "",
       description: "",
@@ -50,7 +50,7 @@ export default function ServiceForm() {
     });
   };
 
-  // For updating the "includedServices" array in each package.
+  // Update the "includedServices" array for each package.
   const handleServiceChange = (packageType, index, value) => {
     const newServices = [...formData[packageType].includedServices];
     newServices[index] = value;
@@ -80,7 +80,7 @@ export default function ServiceForm() {
     });
   };
 
-  // Handle image selection. Each file is stored with a preview URL for immediate display.
+  // Handle image selection. We store each file (with preview URL) locally.
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const newImages = files.map((file) => ({
@@ -109,23 +109,23 @@ export default function ServiceForm() {
     try {
       const token = localStorage.getItem("accessToken");
 
-      // STEP 1: Upload each image individually to Cloudinary via the /upload endpoint.
-      // Removing "Content-Type" here is crucial so that axios automatically sets the correct multipart boundary.
+      // STEP 1: Upload each image individually to Cloudinary via the /api/upload endpoint.
+      // Note: The endpoint is now "/api/upload" to match your server's mounting.
       const uploadPromises = formData.images.map((img) => {
         const imageFormData = new FormData();
         imageFormData.append("file", img.file);
         return axios
-          .post("/upload", imageFormData, {
+          .post("/api/upload", imageFormData, {
             headers: {
               Authorization: `Bearer ${token}`,
-              // Removed "Content-Type": "multipart/form-data" to allow automatic header formation.
+              // Don't manually set "Content-Type" so that axios can handle it.
             },
           })
           .then((res) => res.data.url);
       });
       const imageUrls = await Promise.all(uploadPromises);
 
-      // STEP 2: Prepare the gig payload using the returned secure URLs for images.
+      // STEP 2: Prepare the gig/service payload using the secure URLs for images.
       const gigPayload = {
         title: formData.title,
         description: formData.description,
@@ -138,7 +138,7 @@ export default function ServiceForm() {
         images: imageUrls,
       };
 
-      // Since the Axios base URL is set to "http://localhost:5000/api", posting to "/gigs" targets "http://localhost:5000/api/gigs".
+      // Send the gig data as JSON. 
       const response = await axios.post("/gigs", gigPayload, {
         headers: {
           Authorization: `Bearer ${token}`,
