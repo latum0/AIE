@@ -30,7 +30,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       )}
       <aside className={sidebarClass}>
         <div className="sidebar-header">
-          <h2 className="sidebar-logo">FreelanceHub</h2>
+          <h2 className="sidebar-logo"><i>SKILL MARKET</i></h2>
           {isMobile && (
             <button className="close-sidebar" onClick={toggleSidebar}>×</button>
           )}
@@ -62,6 +62,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           >
             <span className="nav-icon">📋</span>
             <span className="nav-text">Commandes</span>
+          </NavLink>
+          <NavLink 
+            to="/freelancer/Showcase" 
+            className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+            onClick={isMobile ? toggleSidebar : undefined}
+          >
+            <span className="nav-icon">📋</span>
+            <span className="nav-text">invoices</span>
           </NavLink>
         </nav>
 

@@ -1,43 +1,121 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Header.css';
+import { ClipboardList, ShoppingCart, Receipt } from "lucide-react";
+// Configurez axios une fois (à mettre dans un fichier séparé idéalement)
+const api = axios.create({
+  baseURL: 'http://localhost:5000/api',
+});
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
-  const isLoggedIn = !!localStorage.getItem('accessToken');
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  
+  // Gestion plus sécurisée des données utilisateur
+  const [authState, setAuthState] = React.useState({
+    isLoggedIn: false,
+    user: null,
+    isLoading: true
+  });
+
+  React.useEffect(() => {
+    const checkAuth = () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const userData = localStorage.getItem('user');
+        
+        setAuthState({
+          isLoggedIn: !!token,
+          user: userData ? JSON.parse(userData) : null,
+          isLoading: false
+        });
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        setAuthState({
+          isLoggedIn: false,
+          user: null,
+          isLoading: false
+        });
+      }
+    };
+
+    checkAuth();
+    window.addEventListener('storage', checkAuth);
+    
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
 
   const handleLogout = async () => {
     try {
-      await api.post('/auth/logout');
+      await api.post('/auth/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+      console.error('Logout error:', error);
     } finally {
-      // Nettoyer le localStorage
+      // Nettoyage complet
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
-      // Rediriger vers la page de login
+      
+      // Reset l'état
+      setAuthState({
+        isLoggedIn: false,
+        user: null,
+        isLoading: false
+      });
+      
       navigate('/login');
     }
   };
 
+  if (authState.isLoading) {
+    return <header className="header">Chargement...</header>;
+  }
+
   return (
     <header className="header">
       <div className="header-content">
-        <Link to={isLoggedIn ? '/gigs' : '/home'}>
+
+
+        <Link to={authState.isLoggedIn ? '/dashboard' : '/home'}>
+
           <img 
             src="/src/assets/icons/Untitled-12.png" 
             alt="Logo" 
             className="logo"
+            onError={(e) => {
+              e.target.onerror = null; 
+              e.target.src = '/path/to/default/logo.png';
+            }}
           />
         </Link>
+        
         <nav className="nav-links">
-          <Link to="/freelancer" className="seller-link">
-            Devenir freelancer
-          </Link>
-
-          {!isLoggedIn ? (
+          {authState.isLoggedIn ? (
+            <>
+              <Link to="/Histor" className="seller-link">
+                <ClipboardList/>
+              </Link>
+              <Link to="/freelancer" className="seller-link">
+                Freelancer
+              </Link>
+              <div className="user-menu">
+               <Link to="/profile" className="profile-link">
+                  <span>Mon compte</span> {/* Changement ici */}
+                </Link>
+                <button 
+                  onClick={handleLogout} 
+                  className="logout-btn"
+                  aria-label="Déconnexion"
+                >
+                  Déconnexion
+                </button>
+              </div>
+            </>
+          ) : (
             <>
               <Link to="/login" className="signin-link">
                 Se connecter
@@ -46,15 +124,6 @@ const Header = ({ toggleSidebar }) => {
                 S'inscrire
               </Link>
             </>
-          ) : (
-            <div className="user-menu">
-              <Link to="/profile" className="profile-link">
-                <span>Mon compte</span>
-              </Link>
-              <button onClick={handleLogout} className="logout-btn">
-                Déconnexion
-              </button>
-            </div>
           )}
         </nav>
       </div>

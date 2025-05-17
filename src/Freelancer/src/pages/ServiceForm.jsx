@@ -1,122 +1,172 @@
-import { useState, useContext, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ServicesContext } from '../context/ServicesContext';
-import './ServiceForm.css';
+"use client"
+
+import { useState, useContext, useEffect, useCallback } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { ServicesContext } from "../context/ServicesContext"
+import "./ServiceForm.css"
 
 const ServiceForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addService, updateService, getServiceById, loading } = useContext(ServicesContext);
+  const { addService, updateService, getServiceById } = useContext(ServicesContext);
   const isEditMode = !!id;
-  
+
   const initialFormState = {
     title: '',
-    description: '',
-    price: '',
-    category: '',
-    deliveryTime: '',
-    imageFile: null,
-    imagePreview: ''
+    image: '',
+    packages: {
+      basic: {
+        name: 'Basique',
+        price: 0,
+        description: '',
+        deliveryTime: '',
+        concepts: '1 concept',
+        includedServices: [],
+        features: {
+          logoTransparency: false,
+          vectorFile: false,
+          printableFile: false,
+          mockup3D: false,
+          sourceFile: false,
+          stationeryDesigns: false,
+          socialMediaKit: false
+        }
+      },
+      standard: {
+        name: 'Standard',
+        price: 0,
+        description: '',
+        deliveryTime: '',
+        concepts: '2 concepts',
+        includedServices: [],
+        features: {
+          logoTransparency: false,
+          vectorFile: false,
+          printableFile: false,
+          mockup3D: false,
+          sourceFile: false,
+          stationeryDesigns: false,
+          socialMediaKit: false
+        }
+      },
+      premium: {
+        name: 'Premium',
+        price: 0,
+        description: '',
+        deliveryTime: '',
+        concepts: '3 concepts',
+        includedServices: [],
+        features: {
+          logoTransparency: false,
+          vectorFile: false,
+          printableFile: false,
+          mockup3D: false,
+          sourceFile: false,
+          stationeryDesigns: false,
+          socialMediaKit: false
+        }
+      }
+    }
   };
-  
+
   const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [apiError, setApiError] = useState('');
-  
+
+  const deliveryTimes = ['1 jour', '2 jours', '3 jours', '5 jours', '7 jours', '14 jours'];
+  const conceptOptions = ['1 concept', '2 concepts', '3 concepts', 'Illimité'];
+
   useEffect(() => {
-    if (isEditMode && !loading) {
-      const fetchServiceData = async () => {
-        try {
-          const service = await getServiceById(id);
-          if (service) {
-            setFormData({
-              title: service.title,
-              description: service.description,
-              price: service.price.toString(),
-              category: service.category,
-              deliveryTime: service.deliveryTime,
-              imageFile: null,
-              imagePreview: service.image
-            });
-          } else {
-            navigate('/freelancer/services', { replace: true });
-          }
-        } catch (error) {
-          console.error("Error fetching service:", error);
-          navigate('/freelancer/services', { replace: true });
-        }
-      };
-      
-      fetchServiceData();
+    if (isEditMode) {
+      const service = getServiceById(id);
+      if (service) {
+        setFormData({
+          title: service.title,
+          image: service.image || '',
+          packages: service.packages || initialFormState.packages
+        });
+      } else {
+        navigate('/freelancer/services');
+      }
     }
-  }, [id, isEditMode, getServiceById, navigate, loading]);
-  
+  }, [id, isEditMode, getServiceById, navigate]);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    const { name, value, type, checked } = e.target;
     
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: ''
-      });
+    if (name.startsWith('packages.')) {
+      const [, pkgKey, field, feature] = name.split('.');
+      
+      if (feature) {
+        // Handle feature checkbox changes
+        setFormData(prev => ({
+          ...prev,
+          packages: {
+            ...prev.packages,
+            [pkgKey]: {
+              ...prev.packages[pkgKey],
+              features: {
+                ...prev.packages[pkgKey].features,
+                [feature]: checked
+              }
+            }
+          }
+        }));
+      } else {
+        // Handle other package fields
+        setFormData(prev => ({
+          ...prev,
+          packages: {
+            ...prev.packages,
+            [pkgKey]: {
+              ...prev.packages[pkgKey],
+              [field]: type === 'number' ? Number(value) : value
+            }
+          }
+        }));
+      }
+    } else {
+      // Handle top-level fields
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
     }
-    
-    if (apiError) setApiError('');
+
+    // Clear error for the field
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({
-        ...formData,
-        imageFile: file,
-        imagePreview: URL.createObjectURL(file)
-      });
-    }
-  };
-  
   const validateForm = () => {
     const newErrors = {};
     
     if (!formData.title.trim()) {
       newErrors.title = 'Le titre est requis';
-    } else if (formData.title.trim().length < 5) {
-      newErrors.title = 'Le titre doit contenir au moins 5 caractères';
     }
     
-    if (!formData.description.trim()) {
-      newErrors.description = 'La description est requise';
-    } else if (formData.description.trim().length < 20) {
-      newErrors.description = 'La description doit contenir au moins 20 caractères';
-    }
-    
-    if (!formData.price || isNaN(formData.price) || Number(formData.price) <= 0) {
-      newErrors.price = 'Veuillez entrer un prix valide';
-    }
-    
-    if (!formData.category) {
-      newErrors.category = 'La catégorie est requise';
-    }
-    
-    if (!formData.deliveryTime) {
-      newErrors.deliveryTime = 'Le temps de livraison est requis';
-    }
-    
-    // Validation de l'image seulement en mode création
-    if (!isEditMode && !formData.imageFile) {
-      newErrors.image = 'Une image est requise';
-    }
+    // Validate packages
+    Object.entries(formData.packages).forEach(([pkgName, pkg]) => {
+      if (pkg.price <= 0) {
+        newErrors[`${pkgName}_price`] = 'Le prix doit être supérieur à 0';
+      }
+      if (!pkg.description.trim()) {
+        newErrors[`${pkgName}_description`] = 'La description est requise';
+      }
+      if (!pkg.deliveryTime) {
+        newErrors[`${pkgName}_deliveryTime`] = 'Le temps de livraison est requis';
+      }
+    });
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -124,190 +174,206 @@ const ServiceForm = () => {
     }
     
     setIsSubmitting(true);
-    setApiError('');
     
     try {
       const serviceData = {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        price: Number(formData.price),
-        category: formData.category,
-        deliveryTime: formData.deliveryTime,
-        imageFile: formData.imageFile
+        ...formData,
+        rating: 0,
+        createdAt: isEditMode ? formData.createdAt : new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       if (isEditMode) {
-        await updateService(id, serviceData);
+        updateService(id, serviceData);
       } else {
-        await addService(serviceData);
+        addService(serviceData);
       }
       
       navigate('/freelancer/services');
     } catch (error) {
       console.error('Erreur lors de l\'enregistrement du service :', error);
-      setApiError(error.message || 'Une erreur est survenue lors de l\'enregistrement');
     } finally {
       setIsSubmitting(false);
     }
   };
-  
-  const categories = [
-    'Développement',
-    'Design',
-    'Rédaction',
-    'Marketing',
-    'Traduction',
-    'Vidéo & Animation',
-    'Musique & Audio',
-    'Affaires',
-    'Autre'
-  ];
-  
-  const deliveryTimes = [
-    '1 jour',
-    '2 jours',
-    '3 jours',
-    '5 jours',
-    '7 jours',
-    '14 jours',
-    '30 jours'
-  ];
-  
+
   return (
     <div className="service-form-page">
       <div className="card service-form-card">
+        <h1>Portée & Tarification</h1>
         <h2>{isEditMode ? 'Modifier le Service' : 'Créer un Nouveau Service'}</h2>
         
-        {apiError && (
-          <div className="alert alert-danger">
-            {apiError}
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit} className="service-form" noValidate>
+        <form onSubmit={handleSubmit} className="service-form">
           <div className="form-group">
-            <label htmlFor="title" className="form-label">Titre du Service *</label>
+            <label htmlFor="title" className="form-label">Titre du Service</label>
             <input
               type="text"
               id="title"
               name="title"
-              className={`form-control ${errors.title ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.title ? 'error' : ''}`}
               value={formData.title}
               onChange={handleChange}
-              placeholder="Ex. : Développement Web Professionnel"
-              disabled={isSubmitting}
+              placeholder="Donnez un titre accrocheur à votre service"
             />
-            {errors.title && <div className="invalid-feedback">{errors.title}</div>}
+            {errors.title && <div className="error-message">{errors.title}</div>}
+            <p className="hint">
+              Exemple : Conception de logo professionnel, Couverture 2D/3D, Version prête à imprimer
+            </p>
           </div>
           
           <div className="form-group">
-            <label htmlFor="description" className="form-label">Description *</label>
-            <textarea
-              id="description"
-              name="description"
-              rows="5"
-              className={`form-control ${errors.description ? 'is-invalid' : ''}`}
-              value={formData.description}
+            <label htmlFor="image" className="form-label">URL de l'Image</label>
+            <input
+              type="text"
+              id="image"
+              name="image"
+              className={`form-control ${errors.image ? 'error' : ''}`}
+              value={formData.image}
               onChange={handleChange}
-              placeholder="Décrivez votre service en détail..."
-              disabled={isSubmitting}
-            ></textarea>
-            {errors.description && <div className="invalid-feedback">{errors.description}</div>}
+              placeholder="https://example.com/image.jpg"
+            />
+            {errors.image && <div className="error-message">{errors.image}</div>}
           </div>
           
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="price" className="form-label">Prix (€) *</label>
-              <div className="input-group">
-                <input
-                  type="number"
-                  id="price"
-                  name="price"
-                  min="1"
-                  step="0.01"
-                  className={`form-control ${errors.price ? 'is-invalid' : ''}`}
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="29.99"
-                  disabled={isSubmitting}
-                />
-                <span className="input-group-text">€</span>
-              </div>
-              {errors.price && <div className="invalid-feedback">{errors.price}</div>}
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="category" className="form-label">Catégorie *</label>
-              <select
-                id="category"
-                name="category"
-                className={`form-control ${errors.category ? 'is-invalid' : ''}`}
-                value={formData.category}
-                onChange={handleChange}
-                disabled={isSubmitting}
-              >
-                <option value="">Sélectionner une Catégorie</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-              {errors.category && <div className="invalid-feedback">{errors.category}</div>}
-            </div>
-          </div>
-          
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="deliveryTime" className="form-label">Temps de Livraison *</label>
-              <select
-                id="deliveryTime"
-                name="deliveryTime"
-                className={`form-control ${errors.deliveryTime ? 'is-invalid' : ''}`}
-                value={formData.deliveryTime}
-                onChange={handleChange}
-                disabled={isSubmitting}
-              >
-                <option value="">Sélectionner le Temps de Livraison</option>
-                {deliveryTimes.map(time => (
-                  <option key={time} value={time}>{time}</option>
-                ))}
-              </select>
-              {errors.deliveryTime && <div className="invalid-feedback">{errors.deliveryTime}</div>}
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="image" className="form-label">
-                {isEditMode ? 'Modifier l\'image (optionnel)' : 'Image du Service *'}
-              </label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                className={`form-control ${errors.image ? 'is-invalid' : ''}`}
-                onChange={handleImageChange}
-                accept="image/*"
-                disabled={isSubmitting}
-              />
-              {errors.image && <div className="invalid-feedback">{errors.image}</div>}
-            </div>
-          </div>
-          
-          {(formData.imagePreview || (isEditMode && !formData.imageFile)) && (
-            <div className="image-preview mb-3">
-              <img 
-                src={formData.imagePreview} 
-                alt="Aperçu du Service" 
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/300x200?text=Image+Non+Disponible';
-                }}
-              />
-              <div className="image-preview-label">Aperçu de l'image</div>
+          {formData.image && (
+            <div className="image-preview">
+              <img src={formData.image} alt="Aperçu du Service" />
             </div>
           )}
+
+          <h3>Packages</h3>
+          
+          <div className="packages-grid">
+            {Object.entries(formData.packages).map(([pkgKey, pkg]) => (
+              <div key={pkgKey} className="package-column">
+                <div className="form-group">
+                  <label htmlFor={`${pkgKey}-name`}>Nom du Package</label>
+                  <input
+                    type="text"
+                    id={`${pkgKey}-name`}
+                    name={`packages.${pkgKey}.name`}
+                    className="form-control"
+                    value={pkg.name}
+                    onChange={handleChange}
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor={`${pkgKey}-description`}>Description</label>
+                  <textarea
+                    id={`${pkgKey}-description`}
+                    name={`packages.${pkgKey}.description`}
+                    className={`form-control ${errors[`${pkgKey}_description`] ? 'error' : ''}`}
+                    value={pkg.description}
+                    onChange={handleChange}
+                    placeholder="Décrivez en détail ce que comprend ce package"
+                  />
+                  {errors[`${pkgKey}_description`] && (
+                    <div className="error-message">{errors[`${pkgKey}_description`]}</div>
+                  )}
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor={`${pkgKey}-price`}>Prix (DA)</label>
+                  <input
+                    type="number"
+                    id={`${pkgKey}-price`}
+                    name={`packages.${pkgKey}.price`}
+                    min="0"
+                    step="1"
+                    className={`form-control ${errors[`${pkgKey}_price`] ? 'error' : ''}`}
+                    value={pkg.price}
+                    onChange={handleChange}
+                  />
+                  {errors[`${pkgKey}_price`] && (
+                    <div className="error-message">{errors[`${pkgKey}_price`]}</div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <h3>Révisions</h3>
+          
+          <div className="features-table">
+            <div className="table-row header">
+              <div className="table-cell">Fonctionnalités</div>
+              <div className="table-cell">Basique</div>
+              <div className="table-cell">Standard</div>
+              <div className="table-cell">Premium</div>
+            </div>
+            
+            <div className="table-row">
+              <div className="table-cell">Temps de livraison</div>
+              {Object.entries(formData.packages).map(([pkgKey, pkg]) => (
+                <div key={`${pkgKey}-delivery`} className="table-cell">
+                  <select
+                    name={`packages.${pkgKey}.deliveryTime`}
+                    className={`form-control ${errors[`${pkgKey}_deliveryTime`] ? 'error' : ''}`}
+                    value={pkg.deliveryTime}
+                    onChange={handleChange}
+                  >
+                    <option value="">Sélectionner</option>
+                    {deliveryTimes.map(time => (
+                      <option key={time} value={time}>{time}</option>
+                    ))}
+                  </select>
+                  {errors[`${pkgKey}_deliveryTime`] && (
+                    <div className="error-message">{errors[`${pkgKey}_deliveryTime`]}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            <div className="table-row">
+              <div className="table-cell">Nombre de concepts inclus</div>
+              {Object.entries(formData.packages).map(([pkgKey, pkg]) => (
+                <div key={`${pkgKey}-concepts`} className="table-cell">
+                  <select
+                    name={`packages.${pkgKey}.concepts`}
+                    className="form-control"
+                    value={pkg.concepts}
+                    onChange={handleChange}
+                  >
+                    {conceptOptions.map(opt => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+            
+            {[
+              { id: 'logoTransparency', label: 'Transparence du logo' },
+              { id: 'vectorFile', label: 'Fichier vectoriel' },
+              { id: 'printableFile', label: 'Fichier imprimable' },
+              { id: 'mockup3D', label: 'Maquette 3D' },
+              { id: 'sourceFile', label: 'Fichier source' },
+              { id: 'stationeryDesigns', label: 'Designs de papeterie' },
+              { id: 'socialMediaKit', label: 'Kit réseaux sociaux' }
+            ].map(feature => (
+              <div key={feature.id} className="table-row">
+                <div className="table-cell">{feature.label}</div>
+                {Object.keys(formData.packages).map(pkgKey => (
+                  <div key={`${pkgKey}-${feature.id}`} className="table-cell">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name={`packages.${pkgKey}.features.${feature.id}`}
+                        checked={formData.packages[pkgKey].features[feature.id]}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
           
           <div className="form-actions">
             <button
               type="button"
-              className="btn btn-outline-secondary"
+              className="btn btn-outline"
               onClick={() => navigate('/freelancer/services')}
               disabled={isSubmitting}
             >
@@ -317,14 +383,9 @@ const ServiceForm = () => {
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={isSubmitting || loading}
+              disabled={isSubmitting}
             >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  {isEditMode ? 'Mise à jour...' : 'Création...'}
-                </>
-              ) : isEditMode ? 'Mettre à jour le Service' : 'Créer le Service'}
+              {isSubmitting ? 'Enregistrement...' : isEditMode ? 'Mettre à jour' : 'Créer le Service'}
             </button>
           </div>
         </form>

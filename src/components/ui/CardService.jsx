@@ -1,7 +1,7 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaTimesCircle, FaClock, FaSyncAlt } from 'react-icons/fa';
 import './CardService.css';
 
@@ -12,19 +12,13 @@ const iconMap = {
   FaSyncAlt: <FaSyncAlt />,
 };
 
-const CardService = ({ packages, gigId  }) => {
+const CardService = ({ packages, gigId}) => {
   const navigate = useNavigate();
   const [activePackage, setActivePackage] = useState('basic');
   const currentPackage = packages.find(
     (pkg) => pkg.name.toLowerCase() === activePackage
   );
-const handleContinue = () => {
-    navigate(`/checkout/${gigId}`, { 
-      state: { 
-        selectedPackage: currentPackage 
-      } 
-    });
-  };
+
   return (
     <div className="card-container">
       <div className="tabs">
@@ -69,9 +63,10 @@ const handleContinue = () => {
           ))}
         </ul>
 
-       <button className="continue-btn" onClick={handleContinue}>
-      Continuer →
-    </button>
+        <button 
+    className="continue-btn" 
+    onClick={() => navigate(`/checkout/${gigId}`)}
+  >Continuer →</button>
       </div>
     </div>
   );

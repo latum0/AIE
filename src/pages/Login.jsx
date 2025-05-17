@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
@@ -20,13 +20,12 @@ const Login = () => {
     try {
       const response = await axios.post("/auth/login", { email, password });
       
-      // Stocker les tokens et les infos utilisateur
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      // Store token and user info in localStorage
+      localStorage.setItem("accessToken", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       
-      // Rediriger vers la page d'accueil
-      navigate("/gigs");
+      // Redirect to gigs page
+      navigate("/Gigspage");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de la connexion");
     } finally {
@@ -74,7 +73,7 @@ const Login = () => {
         </form>
 
         <div className="signup-link">
-          Pas de compte ? <a href="/Signup">S'inscrire</a>
+          Pas de compte ? <a href="/signup">S'inscrire</a>
         </div>
       </div>
     </div>

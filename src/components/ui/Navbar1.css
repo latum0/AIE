@@ -1,70 +1,70 @@
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 24px;
-    border-bottom: 1px solid #eee;
-    background-color: #fff;
-    font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  font-family: "Segoe UI", sans-serif;
 }
 
 .logo-img {
-    height: 32px;
-    
-    width: auto;
-    object-fit: contain;
+  height: 32px;
+
+  width: auto;
+  object-fit: contain;
 }
 
 .search-bar {
-    display: flex;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    overflow: hidden;
-    width: 450px;
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  width: 450px;
 }
 
 .search-bar input {
-    flex: 1;
-    padding: 8px 12px;
-    border: none;
-    outline: none;
-    font-size: 14px;
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  font-size: 14px;
 }
 
 .search-btn {
-    background-color: #222;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
+  background-color: #222;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
 }
 
 .navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .icon {
-    font-size: 16px;
-    color: #666;
-    cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
 }
 
 .nav-link {
-    font-size: 14px;
-    color: #444;
-    text-decoration: none;
+  font-size: 14px;
+  color: #444;
+  text-decoration: none;
 }
 
 .nav-link.orange {
-    color: #f60;
-    font-weight: bold;
+  color: #f60;
+  font-weight: bold;
 }
 
 .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #1e1e1e, #00f6ff);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e1e1e, #00f6ff);
 }

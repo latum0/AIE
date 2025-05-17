@@ -1,3 +1,10 @@
+:root {
+  --color-primary: #eb7725;
+  /* Vous pouvez aussi ajouter des variations de cette couleur si nécessaire */
+  --color-primary-light: #f5a362;
+  --color-primary-dark: #c45e1b;
+}
+
 .dashboard {
   display: flex;
   flex-direction: column;
@@ -37,7 +44,7 @@
 .stat-value {
   font-size: 2rem;
   font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
+  color: var(--color-primary); /* Utilisation de la nouvelle couleur orange */
   margin-bottom: var(--spacing-xs);
 }
 
@@ -92,7 +99,7 @@
 }
 
 .status-progress.in-progress {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary); /* Utilisation de la nouvelle couleur orange */
 }
 
 .status-progress.completed {
