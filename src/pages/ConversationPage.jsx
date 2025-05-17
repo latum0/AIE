@@ -70,7 +70,7 @@ const ConversationPage = () => {
 
   const handleBack = () => {
     // Navigate to the FreelancerProfile route
-    navigate('/freelancer');
+    navigate('/freelancerProfile');
   };
 
   const handleSendMessage = (e) => {

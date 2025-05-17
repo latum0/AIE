@@ -165,7 +165,7 @@ function Gig() {
   // Fetch seller/freelancer data using gig.userId from the freelancer endpoint.
   useEffect(() => {
     if (gig && gig.userId) {
-      fetch(`http://localhost:5000/api/freelancers/${gig.userId}`)
+      fetch(`http://localhost:5000/api/users/${gig.userId}`)
         .then((res) => {
           if (!res.ok) {
             throw new Error(`Failed to fetch freelancer data, status: ${res.status}`);

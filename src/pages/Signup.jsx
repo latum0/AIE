@@ -5,7 +5,7 @@ import "./Signup.css";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 
-const Register = () => {
+const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,10 +19,10 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -30,7 +30,7 @@ const Register = () => {
     setIsLoading(true);
     setError("");
 
-    // Validation simple
+    // Simple validation
     if (formData.password !== formData.confirmPassword) {
       setError("Les mots de passe ne correspondent pas");
       setIsLoading(false);
@@ -45,13 +45,12 @@ const Register = () => {
         role: formData.role,
       });
 
-      // Stocker les tokens et les infos utilisateur
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      // Store token and user info in localStorage
+      localStorage.setItem("accessToken", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user || {}));
       
-      // Rediriger vers la page d'accueil
-      navigate("/");
+      // Redirect to gigs page
+      navigate("/Gigspage");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription");
     } finally {
@@ -123,12 +122,7 @@ const Register = () => {
 
           <div className="form-group">
             <label htmlFor="role">Rôle</label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-            >
+            <select id="role" name="role" value={formData.role} onChange={handleChange}>
               <option value="buyer">Client</option>
               <option value="seller">FreeLance</option>
             </select>
@@ -147,4 +141,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Signup;

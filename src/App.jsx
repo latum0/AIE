@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// Client pages (from both versions)
+// Client pages
 import Home from './pages/Home';
 import Gig from './pages/Gig';
 import AccountSettings from './pages/AccountSettings';
@@ -10,9 +10,6 @@ import ConfirmP from './pages/ConfirmP';
 import Chat from './pages/Chat';
 import FreelancerProfile from './pages/FreelancerProfile';
 import ConversationPage from './pages/ConversationPage';
-import ReviewsRate from './components/ui/ReviewsRate';
-import ReviewsComment from './components/ui/ReviewsComment';
-
 import FormulaireProjet from './pages/FormulaireProjet';
 import AddTimelineAndBudget from './pages/AddTimelineAndBudget';
 import Login from './pages/Login';
@@ -20,7 +17,8 @@ import Signup from './pages/Signup';
 import Gigspage from './pages/Gigspage';
 import Histor from './pages/Histor';
 import Checkout from './pages/Checkout';
-// Import des composants freelancer
+
+// Freelancer pages
 import Dashboard from './Freelancer/src/pages/Dashboard';
 import ServicesList from './Freelancer/src/pages/ServicesList';
 import ServiceForm from './Freelancer/src/pages/ServiceForm';
@@ -30,8 +28,7 @@ import FreelancerShowcase from './Freelancer/src/pages/FreelancerShowcase';
 // UI components
 import Header from './components/ui/Header';
 import Footer from './components/ui/Footer';
-import Navbar1 from './components/ui/Navbar1';
-
+// Freelancer UI components
 import Sidebar from './Freelancer/src/components/navigation/Sidebar';
 import MobileNavigation from './Freelancer/src/components/navigation/MobileNavigation';
 import FreelancerHeader from './Freelancer/src/components/common/Header';
@@ -51,35 +48,36 @@ function App() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // ClientLayout combines routes from your original file and pulled changes.
+  // Client layout: includes Header, Footer, and client routes.
   const ClientLayout = () => (
     <>
-      {/* You can display both the Navbar1 and the Header (which could serve different purposes) */}
-      
       <Header toggleSidebar={toggleSidebar} />
       <Routes>
-        {/* Redirect root to home */}
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<Home />} />
-        {/* Both versions included Gig; one with an ID param and one without */}
         <Route path="/gig" element={<Gig />} />
+        <Route path="/gig/:id" element={<Gig />} />
         <Route path="/gigs/:id" element={<Gig />} />
         <Route path="/account" element={<AccountSettings />} />
         <Route path="/orderExtras" element={<OrderExtras />} />
         <Route path="/confirmP" element={<ConfirmP />} />
         <Route path="/chat" element={<Chat />} />
-        <Route path="/freelancer/:id" element={<FreelancerProfile />} />
+        <Route path="/freelancerProfile/:id" element={<FreelancerProfile />} />
         <Route path="/conversation" element={<ConversationPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/formulaire-projet" element={<FormulaireProjet />} />
         <Route path="/add-timeline" element={<AddTimelineAndBudget />} />
+        <Route path="/FreelancerShowcase" element={<FreelancerShowcase />} />
+        <Route path="/Checkout" element={<Checkout />} />
+        <Route path="/Histor" element={<Histor />} />
+        <Route path="/Gigspage" element={<Gigspage />} />
       </Routes>
       <Footer />
     </>
   );
 
-  // FreelancerLayout as provided in the pulled file remains intact.
+  // Freelancer layout: includes sidebar, header, and freelancer routes.
   const FreelancerLayout = () => (
     <ServicesProvider>
       <OrdersProvider>
@@ -104,15 +102,12 @@ function App() {
     </ServicesProvider>
   );
 
-  // Layout pour la partie client
-  
-
   return (
     <Router>
       <Routes>
-        {/* Freelancer routes take precedence under /freelancer/* */}
+        {/* Freelancer routes */}
         <Route path="/freelancer/*" element={<FreelancerLayout />} />
-        {/* Everything else uses the client layout */}
+        {/* All other routes use the client layout */}
         <Route path="/*" element={<ClientLayout />} />
       </Routes>
     </Router>

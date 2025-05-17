@@ -1,8 +1,9 @@
+// Gigspage.js
 "use client";
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import "./Gigspage.css";
-import { FaSearch, FaBell, FaEnvelope, FaHeart, FaStar } from "react-icons/fa";
+import { FaHeart, FaStar } from "react-icons/fa";
 
 function Gigspage() {
   const [categorizedGigs, setCategorizedGigs] = useState({});

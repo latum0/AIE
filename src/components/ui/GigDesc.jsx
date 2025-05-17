@@ -10,13 +10,17 @@ const GigDesc = ({ data }) => {
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? data.images.length - 1 : prevIndex - 1
+      prevIndex === 0
+        ? data.images && data.images.length > 0
+          ? data.images.length - 1
+          : 0
+        : prevIndex - 1
     );
   };
 
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === data.images.length - 1 ? 0 : prevIndex + 1
+      data.images && prevIndex === data.images.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -24,13 +28,17 @@ const GigDesc = ({ data }) => {
     setCurrentImageIndex(index);
   };
 
-  // When clicking on the profile image or username, navigate to /freelancer/<id>
+  /**
+   * Handle profile click:
+   * If the gig data contains a nested "user" object (populated from the backend),
+   * use its ID. Otherwise, fall back to using userId, _id, or id properties.
+   */
   const handleProfileClick = () => {
-    // Adjust the property name based on your data shape: data._id or data.id.
-    const freelancerId = data._id || data.id;
-    // Navigate only if a valid ID exists
+    const freelancerId = data.user
+      ? data.user._id || data.user.id
+      : data.userId || data._id || data.id;
     if (freelancerId) {
-      navigate(`/freelancer/${freelancerId}`);
+      navigate(`/freelancerProfile/${freelancerId}`);
     }
   };
 
@@ -78,7 +86,11 @@ const GigDesc = ({ data }) => {
         </button>
 
         <img
-          src={data.images[currentImageIndex] || "/placeholder.svg"}
+          src={
+            data.images && data.images.length > 0
+              ? data.images[currentImageIndex]
+              : "/placeholder.svg"
+          }
           alt={`Image ${currentImageIndex + 1}`}
           className="main-image"
         />
@@ -89,15 +101,18 @@ const GigDesc = ({ data }) => {
       </div>
 
       <div className="thumbnails">
-        {data.images.map((image, index) => (
-          <img
-            key={index}
-            src={image || "/placeholder.svg"}
-            alt={`Thumbnail ${index + 1}`}
-            className={`thumbnail ${index === currentImageIndex ? "active" : ""}`}
-            onClick={() => handleThumbnailClick(index)}
-          />
-        ))}
+        {data.images &&
+          data.images.map((image, index) => (
+            <img
+              key={index}
+              src={image || "/placeholder.svg"}
+              alt={`Thumbnail ${index + 1}`}
+              className={`thumbnail ${
+                index === currentImageIndex ? "active" : ""
+              }`}
+              onClick={() => handleThumbnailClick(index)}
+            />
+          ))}
       </div>
     </div>
   );
