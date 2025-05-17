@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Header.css';
 
 const Header = ({ toggleSidebar }) => {
@@ -9,15 +10,16 @@ const Header = ({ toggleSidebar }) => {
 
   const handleLogout = async () => {
     try {
-      await api.post('/auth/logout');
+      // If your backend provides a logout endpoint, call it:
+      await axios.post('http://localhost:5000/api/auth/logout');
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
     } finally {
-      // Nettoyer le localStorage
+      // Clear authentication data
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
-      // Rediriger vers la page de login
+      // Redirect to login page
       navigate('/login');
     }
   };
@@ -36,7 +38,6 @@ const Header = ({ toggleSidebar }) => {
           <Link to="/freelancer" className="seller-link">
             Devenir freelancer
           </Link>
-
           {!isLoggedIn ? (
             <>
               <Link to="/login" className="signin-link">
