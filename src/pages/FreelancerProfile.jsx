@@ -14,6 +14,8 @@ import "./FreelancerProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
 
 const FreelancerProfile = () => {
+  // Use the "id" parameter since your route is defined as /freelancerProfile/:id
+  const { id } = useParams();
   const [activeTab, setActiveTab] = useState("À propos");
   const [profileData, setProfileData] = useState(null);
   const [gigsData, setGigsData] = useState([]);
@@ -26,53 +28,47 @@ const FreelancerProfile = () => {
   const reviewsRef = useRef(null);
 
   const navigate = useNavigate();
-  const { freelancerId } = useParams();
 
-  // Fetch profile data
+  // Fetch profile data (if an 'id' exists, fetch that user's data; otherwise, fetch current user's profile)
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         let response;
-        if (freelancerId) {
-          response = await fetch(
-            `http://localhost:5000/api/users/${freelancerId}`
-          );
+        if (id) {
+          response = await fetch(`http://localhost:5000/api/users/${id}`);
         } else {
           response = await fetch(`http://localhost:5000/api/users/profile`, {
             credentials: "include",
           });
         }
-
         if (!response.ok) {
           throw new Error("Failed to fetch profile data.");
         }
-
         const data = await response.json();
         setProfileData(data);
+        setLoading(false);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching profile:", err);
+        setLoading(false);
       }
     };
-
     fetchProfile();
-  }, [freelancerId]);
+  }, [id]);
 
-  // Fetch gigs data
+  // Fetch gigs data for the freelancer
   useEffect(() => {
     const fetchGigs = async () => {
       try {
-        const id = profileData?._id || freelancerId;
-        if (!id) return;
-
+        // Use the fetched profile id or the URL parameter 'id'
+        const userId = profileData?._id || id;
+        if (!userId) return;
         const response = await fetch(
-          `http://localhost:5000/api/gigs/freelancer/${id}`
+          `http://localhost:5000/api/gigs/freelancer/${userId}`
         );
-
         if (!response.ok) {
           throw new Error("Failed to fetch gigs data.");
         }
-
         const gigs = await response.json();
         setGigsData(gigs);
       } catch (err) {
@@ -81,10 +77,10 @@ const FreelancerProfile = () => {
       }
     };
 
-    if (profileData || freelancerId) {
+    if (id || profileData) {
       fetchGigs();
     }
-  }, [profileData, freelancerId]);
+  }, [profileData, id]);
 
   // Scroll to section on tab change
   const handleTabChange = (tab) => {
@@ -107,12 +103,11 @@ const FreelancerProfile = () => {
       const elementPosition =
         ref.current.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - totalOffset;
-
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
   };
 
-  // Navigate to conversation
+  // Navigate to conversation (this remains unchanged)
   const handleContact = () => {
     navigate("/conversation");
   };
@@ -130,8 +125,7 @@ const FreelancerProfile = () => {
       const positions = {
         "À propos": aboutRef.current?.offsetTop - totalOffset - 20 || 0,
         Services: gigsRef.current?.offsetTop - totalOffset - 20 || 0,
-        Portfolio:
-          portfolioRef.current?.offsetTop - totalOffset - 20 || 0,
+        Portfolio: portfolioRef.current?.offsetTop - totalOffset - 20 || 0,
         Avis: reviewsRef.current?.offsetTop - totalOffset - 20 || 0,
       };
 
@@ -149,30 +143,8 @@ const FreelancerProfile = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Custom Navigation Component
-  const CustomNavigation = () => {
-    const navItems = ["À propos", "Services", "Portfolio", "Avis"];
-    return (
-      <nav className="profile-nav">
-        <ul>
-          {navItems.map((item) => (
-            <li
-              key={item}
-              className={item === activeTab ? "active" : ""}
-              onClick={() => handleTabChange(item)}
-            >
-              <a
-                href={`#${item.toLowerCase().replace(" ", "-")}`}
-                onClick={(e) => e.preventDefault()}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    );
-  };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="freelancer-profile-page">
@@ -182,10 +154,7 @@ const FreelancerProfile = () => {
           <div className="profile-info">
             <div className="profile-avatar-container">
               <img
-                src={
-                  profileData?.avatar ||
-                  "/placeholder.svg?height=80&width=80"
-                }
+                src={profileData?.avatar || "/placeholder.svg?height=80&width=80"}
                 alt="Profil"
                 className="profile-avatar"
               />
@@ -240,7 +209,24 @@ const FreelancerProfile = () => {
       </div>
 
       {/* Navigation */}
-      <CustomNavigation />
+      <nav className="profile-nav">
+        <ul>
+          {["À propos", "Services", "Portfolio", "Avis"].map((item) => (
+            <li
+              key={item}
+              className={item === activeTab ? "active" : ""}
+              onClick={() => handleTabChange(item)}
+            >
+              <a
+                href={`#${item.toLowerCase().replace(" ", "-")}`}
+                onClick={(e) => e.preventDefault()}
+              >
+                {item}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {/* Content Sections */}
       <div className="profile-content">
@@ -259,8 +245,7 @@ const FreelancerProfile = () => {
             <div className="skills-section">
               <h3 className="skills-title">Compétences</h3>
               <div className="skills-tags">
-                {profileData?.skills &&
-                profileData.skills.length > 0 ? (
+                {profileData?.skills && profileData.skills.length > 0 ? (
                   profileData.skills.map((skill, index) => (
                     <span key={index} className="skill-tag">
                       {skill}
@@ -287,7 +272,7 @@ const FreelancerProfile = () => {
             <div className="gigs-container">
               {gigsData.length > 0 ? (
                 gigsData.map((gig) => (
-                  <div key={gig.id} className="gig-card">
+                  <div key={gig._id} className="gig-card">
                     <div className="gig-image-container">
                       <img
                         src={gig.image || "/placeholder.svg"}
