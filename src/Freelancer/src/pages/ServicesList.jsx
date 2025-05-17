@@ -1,240 +1,164 @@
-import { useContext, useState, useEffect } from 'react';
+"use client"
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ServicesContext } from '../context/ServicesContext';
-import './ServicesList.css';
+import { PlusCircle, Search, List, Grid, Info, RefreshCw } from 'lucide-react';
+import { ServicesContext } from "../context/ServicesContext"
+import ServiceCard from './ServiceCard';
+import "./ServicesList.css"
 
-const ServicesList = () => {
-  const { 
-    services, 
-    loading, 
-    error,
-    deleteService, 
-    toggleServiceStatus,
-    refetchServices
-  } = useContext(ServicesContext);
-  
-  const [filterStatus, setFilterStatus] = useState('all');
+const ListeServices = () => {
+  const { services, deleteService, loadServices } = useContext(ServicesContext);
   const [searchTerm, setSearchTerm] = useState('');
-  const [confirmDelete, setConfirmDelete] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [viewMode, setViewMode] = useState('grid');
   
-  // Filter services based on status and search term
-  const filteredServices = services.filter(service => {
-    const matchesStatus = filterStatus === 'all' || 
-      (filterStatus === 'active' && service.isActive) || 
-      (filterStatus === 'inactive' && !service.isActive);
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await loadServices();
+      } catch (err) {
+        setError('Échec du chargement des services. Veuillez réessayer.');
+        console.error('Erreur lors du chargement des services:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     
-    const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      service.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    return matchesStatus && matchesSearch;
-  });
+    fetchServices();
+  }, [loadServices]);
   
-  const handleDelete = async (id) => {
-    setIsProcessing(true);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  
+  const handleDeleteService = async (id) => {
     try {
       await deleteService(id);
-      setConfirmDelete(null);
-    } catch (error) {
-      console.error("Failed to delete service:", error);
-    } finally {
-      setIsProcessing(false);
+    } catch (err) {
+      setError('Échec de la suppression du service. Veuillez réessayer.');
+      console.error('Erreur lors de la suppression du service:', err);
     }
   };
   
-  const handleToggleStatus = async (id) => {
-    setIsProcessing(true);
-    try {
-      await toggleServiceStatus(id);
-    } catch (error) {
-      console.error("Failed to toggle service status:", error);
-    } finally {
-      setIsProcessing(false);
-    }
+  const filteredServices = services
+    ? services.filter(service => {
+        if (!service) return false;
+        
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          service.title?.toLowerCase().includes(searchLower) ||
+          service.packages?.basic?.description?.toLowerCase().includes(searchLower) ||
+          service.packages?.standard?.description?.toLowerCase().includes(searchLower) ||
+          service.packages?.premium?.description?.toLowerCase().includes(searchLower)
+        );
+      })
+    : [];
+    
+  const handleRetry = () => {
+    loadServices();
+    setError(null);
   };
   
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="services-list-page">
-        <div className="loading-spinner">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Chargement...</span>
-          </div>
-          <p>Chargement de vos services...</p>
-        </div>
+      <div className="services-loading">
+        <RefreshCw className="loading-icon" />
+        <p>Chargement des services...</p>
       </div>
     );
   }
   
   if (error) {
     return (
-      <div className="services-list-page">
-        <div className="error-message alert alert-danger">
-          <p>Erreur lors du chargement de vos services: {error}</p>
-          <button 
-            onClick={refetchServices} 
-            className="btn btn-primary"
-            disabled={isProcessing}
-          >
-            {isProcessing ? 'Chargement...' : 'Réessayer'}
-          </button>
-        </div>
+      <div className="services-error">
+        <Info size={48} className="error-icon" />
+        <h3>Un problème est survenu</h3>
+        <p>{error}</p>
+        <button className="retry-button" onClick={handleRetry}>
+          <RefreshCw size={16} />
+          <span>Réessayer</span>
+        </button>
       </div>
     );
   }
-  
+
   return (
-    <div className="services-list-page">
-      <div className="filters-bar">
-        <div className="search-input">
-          <input 
-            type="text" 
-            placeholder="Rechercher parmi vos services..." 
-            className="form-control"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            disabled={isProcessing}
-          />
+    <div className="services-list-container">
+      <div className="services-list-header">
+        <div className="header-title">
+          <h1>Mes Services</h1>
+          <p>Gérez et mettez à jour vos offres de services</p>
         </div>
         
-        <div className="filter-buttons">
-          <button 
-            className={`btn ${filterStatus === 'all' ? 'btn-primary' : 'btn-outline-secondary'}`}
-            onClick={() => setFilterStatus('all')}
-            disabled={isProcessing}
-          >
-            Tous
-          </button>
-          <button 
-            className={`btn ${filterStatus === 'active' ? 'btn-primary' : 'btn-outline-secondary'}`}
-            onClick={() => setFilterStatus('active')}
-            disabled={isProcessing}
-          >
-            Actifs
-          </button>
-          <button 
-            className={`btn ${filterStatus === 'inactive' ? 'btn-primary' : 'btn-outline-secondary'}`}
-            onClick={() => setFilterStatus('inactive')}
-            disabled={isProcessing}
-          >
-            Inactifs
-          </button>
-        </div>
-        
-        <Link to="/freelancer/services/new" className="btn btn-success">
-          + Nouveau Service
+        <Link to="/freelancer/services/new" className="create-service-btn">
+          <PlusCircle size={18} />
+          <span>Créer un nouveau service</span>
         </Link>
       </div>
       
+      <div className="services-filters">
+        <div className="search-container">
+          <Search size={18} className="search-icon" />
+          <input
+            type="text"
+            placeholder="Rechercher des services..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="search-input"
+          />
+        </div>
+        
+        <div className="view-options">
+          <button 
+            className={`view-option ${viewMode === 'grid' ? 'active' : ''}`}
+            onClick={() => setViewMode('grid')}
+            title="Vue en grille"
+          >
+            <Grid size={18} />
+          </button>
+          <button 
+            className={`view-option ${viewMode === 'list' ? 'active' : ''}`}
+            onClick={() => setViewMode('list')}
+            title="Vue en liste"
+          >
+            <List size={18} />
+          </button>
+        </div>
+      </div>
+      
       {filteredServices.length > 0 ? (
-        <div className="services-grid">
+        <div className={`services-grid view-${viewMode}`}>
           {filteredServices.map(service => (
-            <div key={service._id} className={`service-card ${!service.isActive ? 'inactive' : ''}`}>
-              <div className="service-image">
-                <img 
-                  src={service.image} 
-                  alt={service.title} 
-                  onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/300x200?text=Image+Non+Disponible';
-                  }}
-                />
-                <div className={`service-status ${service.isActive ? 'active' : 'inactive'}`}>
-                  {service.isActive ? 'Actif' : 'Inactif'}
-                </div>
-              </div>
-              
-              <div className="service-content">
-                <h3 className="service-title">{service.title}</h3>
-                <p className="service-description">{service.description}</p>
-                
-                <div className="service-meta">
-                  <div className="service-price">{service.price} €</div>
-                  <div className="service-delivery">{service.deliveryTime}</div>
-                </div>
-                
-                <div className="service-category">{service.category}</div>
-                
-                <div className="service-actions">
-                  <Link 
-                    to={`/freelancer/services/edit/${service._id}`} 
-                    className="btn btn-sm btn-outline-primary"
-                  >
-                    Modifier
-                  </Link>
-                  
-                  <button 
-                    className={`btn btn-sm ${service.isActive ? 'btn-warning' : 'btn-success'}`}
-                    onClick={() => handleToggleStatus(service._id)}
-                    disabled={isProcessing}
-                  >
-                    {service.isActive ? 'Désactiver' : 'Activer'}
-                  </button>
-                  
-                  <button 
-                    className="btn btn-sm btn-danger"
-                    onClick={() => setConfirmDelete(service._id)}
-                    disabled={isProcessing}
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              </div>
-              
-              {confirmDelete === service._id && (
-                <div className="delete-confirmation">
-                  <div className="delete-message">
-                    Êtes-vous sûr de vouloir supprimer ce service ?
-                  </div>
-                  <div className="delete-actions">
-                    <button 
-                      className="btn btn-sm btn-danger"
-                      onClick={() => handleDelete(service._id)}
-                      disabled={isProcessing}
-                    >
-                      {isProcessing ? (
-                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      ) : 'Oui, supprimer'}
-                    </button>
-                    <button 
-                      className="btn btn-sm btn-outline-secondary"
-                      onClick={() => setConfirmDelete(null)}
-                      disabled={isProcessing}
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <ServiceCard
+              key={service.id || service._id}
+              service={service}
+              onDelete={handleDeleteService}
+            />
           ))}
         </div>
       ) : (
         <div className="empty-services">
-          {searchTerm || filterStatus !== 'all' ? (
-            <>
-              <p>Aucun service ne correspond à votre recherche.</p>
-              <button 
-                className="btn btn-outline-primary"
-                onClick={() => {
-                  setSearchTerm('');
-                  setFilterStatus('all');
-                }}
-              >
-                Réinitialiser les filtres
-              </button>
-            </>
-          ) : (
-            <>
-              <p>Vous n'avez pas encore de services. Créez un nouveau service pour commencer.</p>
-              <Link to="/freelancer/services/new" className="btn btn-primary">
-                Créer un nouveau service
-              </Link>
-            </>
-          )}
+          <div className="empty-content">
+            <h3>Aucun service trouvé</h3>
+            {searchTerm ? (
+              <p>Aucun résultat ne correspond à votre recherche. Essayez avec d'autres termes.</p>
+            ) : (
+              <>
+                <p>Vous n'avez pas encore créé de services. Commencez par créer votre premier service.</p>
+                <Link to="/freelancer/services/new" className="create-service-btn">
+                  <PlusCircle size={18} />
+                  <span>Créer un nouveau service</span>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default ServicesList;
+export default ListeServices;

@@ -23,7 +23,7 @@
 }
 
 .mobile-nav-link.active {
-  color: var(--color-primary);
+  color: #eb7725;
 }
 
 .mobile-nav-icon {

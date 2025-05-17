@@ -1,0 +1,346 @@
+.service-card {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.service-content {
+  padding: 1.25rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.package-details {
+  min-height: 200px;
+  flex-grow: 1;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.service-image {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.service-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.service-card:hover .service-image img {
+  transform: scale(1.05);
+}
+
+.service-price-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: #eb7725;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.service-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.service-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.star {
+  color: #e2e8f0;
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+.star.filled {
+  color: #facc15;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.package-tabs {
+  display: flex;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1rem;
+}
+
+.package-tab {
+  flex: 1;
+  padding: 0.75rem 0;
+  border: none;
+  background: none;
+  color: #64748b;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.package-tab.active {
+  color: #eb7725;
+}
+
+.package-tab.active:after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #eb7725;
+}
+
+.package-tab:hover {
+  color: #eb7725;
+}
+
+.package-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #eb7725;
+  margin-bottom: 0.5rem;
+}
+
+.package-description {
+  color: #475569;
+  margin-bottom: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.delivery-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.delivery-time svg {
+  width: 14px;
+  height: 14px;
+}
+
+
+
+
+.feature-icon {
+  color: #10b981;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+.feature-icon.disabled {
+  color: #e2e8f0;
+}
+
+/* Assurez-vous que les icônes Lucide sont bien stylées */
+svg {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: visible;
+}
+
+
+
+
+
+
+
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #334155;
+  font-size: 0.875rem;
+}
+
+
+
+.service-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.edit-button, .delete-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.edit-button svg, 
+.delete-button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.edit-button {
+  background-color: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  text-decoration: none;
+}
+
+.edit-button:hover {
+  background-color: #e2e8f0;
+}
+
+.delete-button {
+  background-color: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+}
+
+.delete-button:hover {
+  background-color: #fecaca;
+}
+
+.delete-confirmation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.98);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  z-index: 10;
+  animation: fade-in 0.2s ease;
+}
+
+.delete-confirmation svg {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.delete-confirmation h4 {
+  color: #ef4444;
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.delete-confirmation p {
+  color: #475569;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+  max-width: 300px;
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.cancel-button, .confirm-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border: none;
+}
+
+.cancel-button {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.cancel-button:hover {
+  background-color: #e2e8f0;
+}
+
+.confirm-button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: #dc2626;
+}
+
+@media (max-width: 640px) {
+  .service-image {
+    height: 160px;
+  }
+  
+  .service-content {
+    padding: 1rem;
+  }
+  
+  .package-details {
+    min-height: 180px;
+  }
+}

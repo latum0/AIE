@@ -36,7 +36,7 @@ const Header = ({ toggleSidebar }) => {
         if (location.pathname.includes('/services/edit/')) {
           setPageTitle('Modifier le Service');
         } else {
-          setPageTitle('FreelanceHub');
+         {/* setPageTitle('FreelanceHub');*/}
         }
     }
   }, [location.pathname]);

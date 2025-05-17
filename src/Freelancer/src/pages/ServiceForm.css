@@ -1,59 +1,238 @@
+/* ServiceForm.css */
 .service-form-page {
-  display: flex;
-  justify-content: center;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .service-form-card {
-  max-width: 800px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.service-form-card h1 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.service-form-card h2 {
+  font-size: 1.25rem;
+  color: #555;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.service-form-card h3 {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.form-control {
   width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
 }
 
-.service-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-lg);
+.form-control:focus {
+  outline: none;
+  border-color:  #eb7725;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 .form-control.error {
-  border-color: var(--color-error);
+  border-color: #e74c3c;
 }
 
 .error-message {
-  color: var(--color-error);
+  color: #e74c3c;
   font-size: 0.85rem;
-  margin-top: 4px;
+  margin-top: 0.25rem;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 0.5rem;
+  font-style: italic;
 }
 
 .image-preview {
-  margin-top: var(--spacing-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-md);
+  margin-top: 1rem;
+  max-width: 200px;
+  border-radius: 6px;
   overflow: hidden;
-  max-height: 200px;
+  border: 1px solid #eee;
 }
 
 .image-preview img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  display: block;
+}
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.package-column {
+  background: #f9f9f9;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.features-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.table-row {
+  display: table-row;
+}
+
+.table-row.header {
+  font-weight: 600;
+  background-color: #f5f5f5;
+}
+
+.table-cell {
+  display: table-cell;
+  padding: 0.75rem;
+  border: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.table-cell:first-child {
+  font-weight: 500;
+  width: 30%;
+}
+
+.checkbox-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox-label input {
+  width: 18px;
+  height: 18px;
+  accent-color:  #eb7725;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-lg);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background-color:  #eb7725;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color:  #eb7725;
+}
+
+.btn-primary:disabled {
+  background-color: #a0c4f3;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+.btn-outline:hover {
+  background-color: #f5f5f5;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
 }
 
 @media (max-width: 768px) {
-  .form-row {
+  .packages-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md);
+  }
+  
+  .features-table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .table-row {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .table-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .table-cell:first-child {
+    width: 100%;
+    font-weight: 600;
+    background-color: #f5f5f5;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
   }
 }
