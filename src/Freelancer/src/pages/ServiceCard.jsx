@@ -1,120 +1,140 @@
-"use client"
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Edit, Trash2, Star, Clock, CheckCircle, XCircle } from 'lucide-react';
-import './ServiceCard.css';
+"use client";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Edit, Trash2, Star, Clock, CheckCircle, XCircle } from "lucide-react";
+import "./ServiceCard.css";
 
 const CarteService = ({ service, onDelete }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [expandedPackage, setExpandedPackage] = useState('basic');
-  
+  const [expandedPackage, setExpandedPackage] = useState("basic");
+
+  // Get service ID from either property (if available)
+  const serviceId = service.id || service._id;
+
+  // Determine which image to display:
+  const displayImage =
+    service.images && service.images.length > 0
+      ? service.images[0]
+      : "/placeholder.png";
+
   const handleDeleteClick = () => {
     setShowDeleteConfirm(true);
   };
-  
+
   const handleConfirmDelete = () => {
-    onDelete(service.id);
+    onDelete(serviceId);
     setShowDeleteConfirm(false);
   };
-  
+
   const handleCancelDelete = () => {
     setShowDeleteConfirm(false);
   };
-  
+
   const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-    
+
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
-        stars.push(<Star key={i} className="star filled" size={18} strokeWidth={2.5} />);
+        stars.push(
+          <Star key={i} className="star filled" size={18} strokeWidth={2.5} />
+        );
       } else if (i === fullStars + 1 && hasHalfStar) {
-        stars.push(<Star key={i} className="star half" size={18} strokeWidth={2.5} />);
+        stars.push(
+          <Star key={i} className="star half" size={18} strokeWidth={2.5} />
+        );
       } else {
-        stars.push(<Star key={i} className="star" size={18} strokeWidth={2.5} />);
+        stars.push(
+          <Star key={i} className="star" size={18} strokeWidth={2.5} />
+        );
       }
     }
-    
+
     return stars;
   };
-  
+
   const renderFeatures = (features) => {
     if (!features) return null;
-    
     return (
       <ul className="features-list">
-        {Object.entries(features).map(([key, enabled]) => (
-          enabled && (
-            <li key={key} className="feature-item">
-              <CheckCircle className="feature-icon" size={16} strokeWidth={2.5} />
-              <span>{formatFeatureName(key)}</span>
-            </li>
-          )
-        ))}
+        {Object.entries(features).map(
+          ([key, enabled]) =>
+            enabled && (
+              <li key={key} className="feature-item">
+                <CheckCircle
+                  className="feature-icon"
+                  size={16}
+                  strokeWidth={2.5}
+                />
+                <span>{formatFeatureName(key)}</span>
+              </li>
+            )
+        )}
       </ul>
     );
   };
-  
+
   const formatFeatureName = (key) => {
     return key
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/^./, str => str.toUpperCase())
-      .replace('Revisions', 'Révisions')
-      .replace('Delivery', 'Livraison')
-      .replace('Source', 'Code source');
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (str) => str.toUpperCase())
+      .replace("Revisions", "Révisions")
+      .replace("Delivery", "Livraison")
+      .replace("Source", "Code source");
   };
-  
+
   const getLowestPrice = () => {
     const prices = [
       service.packages.basic.price,
       service.packages.standard.price,
-      service.packages.premium.price
-    ].filter(price => typeof price === 'number' && !isNaN(price));
-    
+      service.packages.premium.price,
+    ].filter((price) => typeof price === "number" && !isNaN(price));
     return Math.min(...prices);
   };
-  
+
   const { basic, standard, premium } = service.packages;
-  
+
   return (
     <div className="service-card">
       <div className="service-image">
-        <img src={service.image} alt={service.title} />
-        <div className="service-price-badge">À partir de {getLowestPrice()}DA</div>
+        <img src={displayImage} alt={service.title} />
+        <div className="service-price-badge">
+          À partir de {getLowestPrice()}DA
+        </div>
       </div>
-      
+
       <div className="service-content">
         <h3 className="service-title">{service.title}</h3>
-        
+
         <div className="service-rating">
           <div className="stars">{renderStars(service.rating || 0)}</div>
           <span className="rating-value">{service.rating || 0}</span>
         </div>
-        
+
         <div className="package-tabs">
-          <button 
-            className={`package-tab ${expandedPackage === 'basic' ? 'active' : ''}`}
-            onClick={() => setExpandedPackage('basic')}
+          <button
+            className={`package-tab ${expandedPackage === "basic" ? "active" : ""}`}
+            onClick={() => setExpandedPackage("basic")}
           >
             Basique
           </button>
-          <button 
-            className={`package-tab ${expandedPackage === 'standard' ? 'active' : ''}`}
-            onClick={() => setExpandedPackage('standard')}
+          <button
+            className={`package-tab ${expandedPackage === "standard" ? "active" : ""}`}
+            onClick={() => setExpandedPackage("standard")}
           >
             Standard
           </button>
-          <button 
-            className={`package-tab ${expandedPackage === 'premium' ? 'active' : ''}`}
-            onClick={() => setExpandedPackage('premium')}
+          <button
+            className={`package-tab ${expandedPackage === "premium" ? "active" : ""}`}
+            onClick={() => setExpandedPackage("premium")}
           >
             Premium
           </button>
         </div>
-        
+
         <div className="package-details">
-          {expandedPackage === 'basic' && (
+          {expandedPackage === "basic" && (
             <>
               <div className="package-price">{basic.price}DA</div>
               <p className="package-description">{basic.description}</p>
@@ -127,8 +147,7 @@ const CarteService = ({ service, onDelete }) => {
               {renderFeatures(basic.features)}
             </>
           )}
-          
-          {expandedPackage === 'standard' && (
+          {expandedPackage === "standard" && (
             <>
               <div className="package-price">{standard.price}DA</div>
               <p className="package-description">{standard.description}</p>
@@ -141,8 +160,7 @@ const CarteService = ({ service, onDelete }) => {
               {renderFeatures(standard.features)}
             </>
           )}
-          
-          {expandedPackage === 'premium' && (
+          {expandedPackage === "premium" && (
             <>
               <div className="package-price">{premium.price}DA</div>
               <p className="package-description">{premium.description}</p>
@@ -156,9 +174,9 @@ const CarteService = ({ service, onDelete }) => {
             </>
           )}
         </div>
-        
+
         <div className="service-actions">
-          <Link to={`/freelancer/services/edit/${service.id}`} className="edit-button">
+          <Link to={`/freelancer/services/edit/${serviceId}`} className="edit-button">
             <Edit size={16} strokeWidth={2.5} />
             <span>Modifier</span>
           </Link>
@@ -168,11 +186,14 @@ const CarteService = ({ service, onDelete }) => {
           </button>
         </div>
       </div>
-      
+
       {showDeleteConfirm && (
         <div className="delete-confirmation">
           <h4>Supprimer le service ?</h4>
-          <p>Êtes-vous sûr de vouloir supprimer ce service ? Cette action est irréversible.</p>
+          <p>
+            Êtes-vous sûr de vouloir supprimer ce service ? Cette action est
+            irréversible.
+          </p>
           <div className="confirmation-actions">
             <button className="cancel-button" onClick={handleCancelDelete}>
               <XCircle size={16} strokeWidth={2.5} />

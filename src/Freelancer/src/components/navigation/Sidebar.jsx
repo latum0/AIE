@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       )}
       <aside className={sidebarClass}>
         <div className="sidebar-header">
-          <h2 className="sidebar-logo"><i>SKILL MARKET</i></h2>
+          <button onClick={()=>{navigate('/GigsPage')}}> <h2 className="sidebar-logo"><i>SKILL MARKET</i></h2>  </button> 
           {isMobile && (
             <button className="close-sidebar" onClick={toggleSidebar}>×</button>
           )}

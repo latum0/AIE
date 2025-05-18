@@ -10,13 +10,13 @@ export default function ServiceForm() {
 
   const [formData, setFormData] = useState({
     title: "",
-    description: "", // Gig-level description field
+    description: "",
     category: "",
     images: [],
-    // We'll store package details here
     basic: {
       title: "",
       description: "",
+      price: "", // new field for package price
       deliveryTime: "",
       revisions: "",
       includedServices: [""],
@@ -24,6 +24,7 @@ export default function ServiceForm() {
     standard: {
       title: "",
       description: "",
+      price: "",
       deliveryTime: "",
       revisions: "",
       includedServices: [""],
@@ -31,6 +32,7 @@ export default function ServiceForm() {
     premium: {
       title: "",
       description: "",
+      price: "",
       deliveryTime: "",
       revisions: "",
       includedServices: [""],
@@ -42,7 +44,7 @@ export default function ServiceForm() {
     setFormData({ ...formData, [field]: value });
   };
 
-  // Update package fields
+  // Update package fields (works for the new "price" field as well)
   const handlePackageChange = (packageType, field, value) => {
     setFormData({
       ...formData,
@@ -71,7 +73,7 @@ export default function ServiceForm() {
   };
 
   const removeService = (packageType, index) => {
-    if (formData[packageType].includedServices.length === 1) return; // Prevent removing the last one.
+    if (formData[packageType].includedServices.length === 1) return;
     const newServices = [...formData[packageType].includedServices];
     newServices.splice(index, 1);
     setFormData({
@@ -98,32 +100,88 @@ export default function ServiceForm() {
     setFormData({ ...formData, images: newImages });
   };
 
+  // Validate that all required fields are filled in.
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      alert("Veuillez renseigner le titre du service.");
+      return false;
+    }
+    if (!formData.description.trim()) {
+      alert("Veuillez renseigner la description du service.");
+      return false;
+    }
+    if (!formData.category.trim()) {
+      alert("Veuillez sélectionner une catégorie.");
+      return false;
+    }
+    if (formData.images.length < 1) {
+      alert("Veuillez sélectionner au moins une image.");
+      return false;
+    }
+    const packageTypes = ["basic", "standard", "premium"];
+    for (let type of packageTypes) {
+      const pkg = formData[type];
+      if (!pkg.title.trim()) {
+        alert(`Veuillez renseigner le titre du forfait ${type}.`);
+        return false;
+      }
+      if (!pkg.description.trim()) {
+        alert(`Veuillez renseigner la description du forfait ${type}.`);
+        return false;
+      }
+      if (!pkg.price || Number(pkg.price) <= 0) {
+        alert(`Veuillez renseigner un prix valide pour le forfait ${type}.`);
+        return false;
+      }
+      if (!pkg.deliveryTime) {
+        alert(`Veuillez renseigner le délai de livraison du forfait ${type}.`);
+        return false;
+      }
+      // Assuming 0 is acceptable for revisions; here we simply check that it is not empty.
+      if (pkg.revisions === "") {
+        alert(`Veuillez renseigner le nombre de révisions du forfait ${type}.`);
+        return false;
+      }
+      if (!pkg.includedServices || pkg.includedServices.length < 1) {
+        alert(`Veuillez ajouter au moins une inclusion pour le forfait ${type}.`);
+        return false;
+      }
+      for (let service of pkg.includedServices) {
+        if (!service.trim()) {
+          alert(`Veuillez renseigner toutes les inclusions pour le forfait ${type}.`);
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.images.length < 1) {
-      alert("Veuillez sélectionner au moins une image.");
+    // Validate the form before proceeding.
+    if (!validateForm()) {
       return;
     }
 
     try {
       const token = localStorage.getItem("accessToken");
 
-      // STEP 1: Upload each image individually to Cloudinary via the /api/upload endpoint.
-      // Note: The endpoint is now "/api/upload" to match your server's mounting.
-      const uploadPromises = formData.images.map((img) => {
-        const imageFormData = new FormData();
+      // STEP 1: Upload all images in a single request.
+      const imageFormData = new FormData();
+      formData.images.forEach((img) => {
         imageFormData.append("file", img.file);
-        return axios
-          .post("/api/upload", imageFormData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              // Don't manually set "Content-Type" so that axios can handle it.
-            },
-          })
-          .then((res) => res.data.url);
       });
-      const imageUrls = await Promise.all(uploadPromises);
+
+      const uploadResponse = await axios.post("/upload", imageFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Axios will automatically set the Content-Type for FormData.
+        },
+      });
+
+      // Expect response to have a "urls" property with an array of secure image URLs.
+      const imageUrls = uploadResponse.data.urls;
 
       // STEP 2: Prepare the gig/service payload using the secure URLs for images.
       const gigPayload = {
@@ -138,7 +196,6 @@ export default function ServiceForm() {
         images: imageUrls,
       };
 
-      // Send the gig data as JSON. 
       const response = await axios.post("/gigs", gigPayload, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -175,9 +232,8 @@ export default function ServiceForm() {
             type="text"
             placeholder={`Titre du forfait ${packageTitle.toLowerCase()}`}
             value={packageData.title}
-            onChange={(e) =>
-              handlePackageChange(packageType, "title", e.target.value)
-            }
+            onChange={(e) => handlePackageChange(packageType, "title", e.target.value)}
+            required
           />
         </div>
         <div className="form-group">
@@ -189,11 +245,26 @@ export default function ServiceForm() {
             className="form-control"
             placeholder={`Décrivez ce qui est inclus dans votre forfait ${packageTitle.toLowerCase()}`}
             value={packageData.description}
-            onChange={(e) =>
-              handlePackageChange(packageType, "description", e.target.value)
-            }
+            onChange={(e) => handlePackageChange(packageType, "description", e.target.value)}
+            required
           />
           <p className="hint">Soyez précis sur ce que les clients recevront</p>
+        </div>
+        {/* New Price Field */}
+        <div className="form-group">
+          <label className="form-label" htmlFor={`${packageType}-price`}>
+            Prix (€)
+          </label>
+          <input
+            id={`${packageType}-price`}
+            className="form-control"
+            type="number"
+            min="0"
+            placeholder="ex. 100"
+            value={packageData.price}
+            onChange={(e) => handlePackageChange(packageType, "price", e.target.value)}
+            required
+          />
         </div>
         <div className="form-row">
           <div className="form-group half">
@@ -207,9 +278,8 @@ export default function ServiceForm() {
               min="1"
               placeholder="ex. 3"
               value={packageData.deliveryTime}
-              onChange={(e) =>
-                handlePackageChange(packageType, "deliveryTime", e.target.value)
-              }
+              onChange={(e) => handlePackageChange(packageType, "deliveryTime", e.target.value)}
+              required
             />
           </div>
           <div className="form-group half">
@@ -223,9 +293,8 @@ export default function ServiceForm() {
               min="0"
               placeholder="ex. 2"
               value={packageData.revisions}
-              onChange={(e) =>
-                handlePackageChange(packageType, "revisions", e.target.value)
-              }
+              onChange={(e) => handlePackageChange(packageType, "revisions", e.target.value)}
+              required
             />
           </div>
         </div>
@@ -247,9 +316,8 @@ export default function ServiceForm() {
                 type="text"
                 placeholder={`Inclusion ${index + 1}`}
                 value={service}
-                onChange={(e) =>
-                  handleServiceChange(packageType, index, e.target.value)
-                }
+                onChange={(e) => handleServiceChange(packageType, index, e.target.value)}
+                required
               />
               <button
                 type="button"
@@ -282,9 +350,8 @@ export default function ServiceForm() {
               type="text"
               placeholder="ex. Conception de logo professionnel"
               value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              required
             />
           </div>
           <div className="form-group">
@@ -296,9 +363,8 @@ export default function ServiceForm() {
               className="form-control"
               placeholder="Décrivez votre service"
               value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
             />
           </div>
           <div className="form-group">
@@ -307,9 +373,8 @@ export default function ServiceForm() {
               id="service-category"
               className="form-control"
               value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              required
             >
               <option value="">Sélectionnez une catégorie</option>
               <option value="design">Design graphique</option>
@@ -332,6 +397,7 @@ export default function ServiceForm() {
                   multiple
                   onChange={handleImageUpload}
                   className="image-upload-input"
+                  required
                 />
                 <div className="image-upload-button">
                   <span>+ Ajouter des images</span>

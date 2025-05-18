@@ -19,6 +19,58 @@
     height: 30px;
     cursor: pointer;
   }
+
+  .search-bar {
+  position: relative;
+  margin: 0 20px;
+  width: 300px;  /* Adjust width as needed */
+}
+
+/* Search input styling */
+.search-input {
+  width: 100%;
+  padding: 10px 45px 10px 10px; /* Right padding leaves space for the icon */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Search icon in the input */
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+}
+
+/* Suggestions dropdown */
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each suggestion item */
+.suggestion-item {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
   
   .logo {
     font-size: 1.5rem;

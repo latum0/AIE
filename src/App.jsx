@@ -1,6 +1,11 @@
 // App.jsx
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
 // Client pages
 import Home from './pages/Home';
@@ -18,6 +23,7 @@ import Signup from './pages/Signup';
 import Gigspage from './pages/Gigspage';
 import Histor from './pages/Histor';
 import Checkout from './pages/Checkout';
+import EditGig from './Freelancer/src/pages/EditGig';
 
 // Freelancer pages
 import Dashboard from './Freelancer/src/pages/Dashboard';
@@ -47,7 +53,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+    setSidebarOpen((prev) => !prev);
   };
 
   // Client layout: includes Header, Footer, and client routes.
@@ -79,7 +85,7 @@ function App() {
     </>
   );
 
-  // Freelancer layout using the dynamic userId parameter
+  // Freelancer layout - using the dynamic :userId parameter.
   const FreelancerLayout = () => (
     <ServicesProvider>
       <OrdersProvider>
@@ -93,7 +99,9 @@ function App() {
                 <Route path="services" element={<ServicesList />} />
                 <Route path="services/new" element={<ServiceForm />} />
                 <Route path="services/edit/:id" element={<ServiceForm />} />
+                <Route path="services/editGig/:id" element={<EditGig />} />
                 <Route path="orders" element={<OrderRequests />} />
+
               </Routes>
             </div>
           </div>
@@ -106,7 +114,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Freelancer routes with dynamic userId */}
+        {/* Freelancer routes: Pass the freelancer's userId */}
         <Route path="/freelancer/:userId/*" element={<FreelancerLayout />} />
         {/* Client routes */}
         <Route path="/*" element={<ClientLayout />} />

@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color:  #eb7725;
+  background-color: #eb7725;
   color: white;
   font-weight: 500;
   padding: 0.625rem 1.25rem;
@@ -36,7 +36,7 @@
 }
 
 .create-service-btn:hover {
-  background-color:  #eb7725;
+  background-color: #eb7725;
 }
 
 .services-filters {
@@ -71,7 +71,7 @@
 
 .search-input:focus {
   outline: none;
-  border-color:  #eb7725;
+  border-color: #eb7725;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -101,7 +101,7 @@
 
 .view-option.active {
   background: #eff6ff;
-  color:  #eb7725;
+  color: #eb7725;
   border-color: #bfdbfe;
 }
 
@@ -134,7 +134,7 @@
 
 .loading-icon {
   animation: spin 1.5s linear infinite;
-  color:  #eb7725;
+  color: #eb7725;
   margin-bottom: 1rem;
 }
 
@@ -220,4 +220,68 @@
   .services-grid.view-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
+}
+
+/* GigCard Styles */
+.gig-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 1rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.gig-card-content {
+  margin-bottom: 1rem;
+}
+
+.gig-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: #1e293b;
+}
+
+.gig-description {
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+.gig-card-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.delete-button,
+.edit-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.delete-button {
+  background-color: #ef4444;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}
+
+.edit-button {
+  text-decoration: none;
+  background-color: #3b82f6;
+  color: #fff;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.edit-button:hover {
+  background-color: #2563eb;
 }
