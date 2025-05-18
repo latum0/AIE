@@ -193,7 +193,7 @@ function Gig() {
       .then(res => res.json())
       .then(sellerData => {
         setSeller({
-          profilePicture: sellerData.avatar || "/placeholder.svg",
+          profilePicture: sellerData.image || "/placeholder.svg",
           username: sellerData.name,
           studioName: sellerData.address?.city ? `Studio de ${sellerData.address.city}` : "Studio Indépendant",
           rating: 4.9, // Valeur par défaut
@@ -299,7 +299,7 @@ function Gig() {
   return (
     <div className="gig-container">
       <div className="left-column">
-        <GigDesc data={gig || {}} />
+        <GigDesc data={gig || {}} seller={seller} />
         <GigAbout description={gig?.description || "No description available"} />
         {seller ? (
           <SellerAbout data={seller} />
