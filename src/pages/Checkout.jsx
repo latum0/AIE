@@ -15,7 +15,7 @@ export default function Checkout() {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("accessToken");
         if (!token) throw new Error("Non authentifié");
 
         const response = await fetch("http://localhost:5000/api/auth/me", {

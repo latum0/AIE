@@ -2,120 +2,51 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Header.css';
-import { ClipboardList, ShoppingCart, Receipt } from "lucide-react";
-// Configurez axios une fois (à mettre dans un fichier séparé idéalement)
-const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
-});
-
+import { ClipboardList } from "lucide-react";
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
-  
-  // Gestion plus sécurisée des données utilisateur
-  const [authState, setAuthState] = React.useState({
-    isLoggedIn: false,
-    user: null,
-    isLoading: true
-  });
-
-  React.useEffect(() => {
-    const checkAuth = () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        const userData = localStorage.getItem('user');
-        
-        setAuthState({
-          isLoggedIn: !!token,
-          user: userData ? JSON.parse(userData) : null,
-          isLoading: false
-        });
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        setAuthState({
-          isLoggedIn: false,
-          user: null,
-          isLoading: false
-        });
-      }
-    };
-
-    checkAuth();
-    window.addEventListener('storage', checkAuth);
-    
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
 
   const handleLogout = async () => {
     try {
-      await api.post('/auth/logout', {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
+      // If your backend provides a logout endpoint, call it:
+      await axios.post('http://localhost:5000/api/auth/logout');
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Erreur lors de la déconnexion:', error);
     } finally {
-      // Nettoyage complet
+      // Clear authentication data
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
-      
-      // Reset l'état
-      setAuthState({
-        isLoggedIn: false,
-        user: null,
-        isLoading: false
-      });
-      
+      // Redirect to login page
       navigate('/login');
     }
   };
-
-  if (authState.isLoading) {
-    return <header className="header">Chargement...</header>;
-  }
 
   return (
     <header className="header">
       <div className="header-content">
 
-
-        <Link to={authState.isLoggedIn ? '/dashboard' : '/home'}>
-
+        
+        <Link to={isLoggedIn ? '/Gigspage' : '/home'}>
           <img 
-            src="/src/assets/icons/Untitled-12.png" 
+            src="/src/assets/icons/untitled-12.png" 
             alt="Logo" 
             className="logo"
-            onError={(e) => {
-              e.target.onerror = null; 
-              e.target.src = '/path/to/default/logo.png';
-            }}
           />
         </Link>
-        
         <nav className="nav-links">
-          {authState.isLoggedIn ? (
-            <>
-              <Link to="/Histor" className="seller-link">
-                <ClipboardList/>
-              </Link>
-              <Link to="/freelancer" className="seller-link">
-                Freelancer
-              </Link>
-              <div className="user-menu">
-               <Link to="/profile" className="profile-link">
-                  <span>Mon compte</span> {/* Changement ici */}
-                </Link>
-                <button 
-                  onClick={handleLogout} 
-                  className="logout-btn"
-                  aria-label="Déconnexion"
-                >
-                  Déconnexion
-                </button>
-              </div>
-            </>
-          ) : (
+          <Link to="/Histor" className="seller-link">
+        <ClipboardList />
+      </Link>
+          <Link 
+            to={user ? `/freelancer/${user._id || user.id}/dashboard` : '/freelancer'}
+            className="seller-link"
+          >
+            Freelancer
+          </Link>
+          {!isLoggedIn ? (
             <>
               <Link to="/login" className="signin-link">
                 Se connecter
@@ -124,6 +55,15 @@ const Header = ({ toggleSidebar }) => {
                 S'inscrire
               </Link>
             </>
+          ) : (
+            <div className="user-menu">
+              <Link to="/profile" className="profile-link">
+                <span>Mon compte</span>
+              </Link>
+              <button onClick={handleLogout} className="logout-btn">
+                Déconnexion
+              </button>
+            </div>
           )}
         </nav>
       </div>

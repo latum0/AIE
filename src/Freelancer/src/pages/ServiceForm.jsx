@@ -1,397 +1,376 @@
 "use client"
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import "./ServiceForm.css";
 
-import { useState, useContext, useEffect, useCallback } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import { ServicesContext } from "../context/ServicesContext"
-import "./ServiceForm.css"
-
-const ServiceForm = () => {
-  const { id } = useParams();
+export default function ServiceForm() {
   const navigate = useNavigate();
-  const { addService, updateService, getServiceById } = useContext(ServicesContext);
-  const isEditMode = !!id;
+  const { userId } = useParams(); // Authenticated user's ID from the URL
 
-  const initialFormState = {
-    title: '',
-    image: '',
-    packages: {
-      basic: {
-        name: 'Basique',
-        price: 0,
-        description: '',
-        deliveryTime: '',
-        concepts: '1 concept',
-        includedServices: [],
-        features: {
-          logoTransparency: false,
-          vectorFile: false,
-          printableFile: false,
-          mockup3D: false,
-          sourceFile: false,
-          stationeryDesigns: false,
-          socialMediaKit: false
-        }
-      },
-      standard: {
-        name: 'Standard',
-        price: 0,
-        description: '',
-        deliveryTime: '',
-        concepts: '2 concepts',
-        includedServices: [],
-        features: {
-          logoTransparency: false,
-          vectorFile: false,
-          printableFile: false,
-          mockup3D: false,
-          sourceFile: false,
-          stationeryDesigns: false,
-          socialMediaKit: false
-        }
-      },
-      premium: {
-        name: 'Premium',
-        price: 0,
-        description: '',
-        deliveryTime: '',
-        concepts: '3 concepts',
-        includedServices: [],
-        features: {
-          logoTransparency: false,
-          vectorFile: false,
-          printableFile: false,
-          mockup3D: false,
-          sourceFile: false,
-          stationeryDesigns: false,
-          socialMediaKit: false
-        }
-      }
-    }
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "", // Gig-level description field
+    category: "",
+    // We'll store image file objects here until they are uploaded to Cloudinary.
+    images: [],
+    // Use "includedServices" to match your Gig model.
+    basic: {
+      title: "",
+      description: "",
+      deliveryTime: "",
+      revisions: "",
+      includedServices: [""],
+    },
+    standard: {
+      title: "",
+      description: "",
+      deliveryTime: "",
+      revisions: "",
+      includedServices: [""],
+    },
+    premium: {
+      title: "",
+      description: "",
+      deliveryTime: "",
+      revisions: "",
+      includedServices: [""],
+    },
+  });
+
+  // Generic field change handler
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
   };
 
-  const [formData, setFormData] = useState(initialFormState);
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const deliveryTimes = ['1 jour', '2 jours', '3 jours', '5 jours', '7 jours', '14 jours'];
-  const conceptOptions = ['1 concept', '2 concepts', '3 concepts', 'Illimité'];
-
-  useEffect(() => {
-    if (isEditMode) {
-      const service = getServiceById(id);
-      if (service) {
-        setFormData({
-          title: service.title,
-          image: service.image || '',
-          packages: service.packages || initialFormState.packages
-        });
-      } else {
-        navigate('/freelancer/services');
-      }
-    }
-  }, [id, isEditMode, getServiceById, navigate]);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    
-    if (name.startsWith('packages.')) {
-      const [, pkgKey, field, feature] = name.split('.');
-      
-      if (feature) {
-        // Handle feature checkbox changes
-        setFormData(prev => ({
-          ...prev,
-          packages: {
-            ...prev.packages,
-            [pkgKey]: {
-              ...prev.packages[pkgKey],
-              features: {
-                ...prev.packages[pkgKey].features,
-                [feature]: checked
-              }
-            }
-          }
-        }));
-      } else {
-        // Handle other package fields
-        setFormData(prev => ({
-          ...prev,
-          packages: {
-            ...prev.packages,
-            [pkgKey]: {
-              ...prev.packages[pkgKey],
-              [field]: type === 'number' ? Number(value) : value
-            }
-          }
-        }));
-      }
-    } else {
-      // Handle top-level fields
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-
-    // Clear error for the field
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.title.trim()) {
-      newErrors.title = 'Le titre est requis';
-    }
-    
-    // Validate packages
-    Object.entries(formData.packages).forEach(([pkgName, pkg]) => {
-      if (pkg.price <= 0) {
-        newErrors[`${pkgName}_price`] = 'Le prix doit être supérieur à 0';
-      }
-      if (!pkg.description.trim()) {
-        newErrors[`${pkgName}_description`] = 'La description est requise';
-      }
-      if (!pkg.deliveryTime) {
-        newErrors[`${pkgName}_deliveryTime`] = 'Le temps de livraison est requis';
-      }
+  // Update package fields
+  const handlePackageChange = (packageType, field, value) => {
+    setFormData({
+      ...formData,
+      [packageType]: { ...formData[packageType], [field]: value },
     });
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  // For updating the "includedServices" array in each package.
+  const handleServiceChange = (packageType, index, value) => {
+    const newServices = [...formData[packageType].includedServices];
+    newServices[index] = value;
+    setFormData({
+      ...formData,
+      [packageType]: { ...formData[packageType], includedServices: newServices },
+    });
+  };
+
+  const addService = (packageType) => {
+    setFormData({
+      ...formData,
+      [packageType]: {
+        ...formData[packageType],
+        includedServices: [...formData[packageType].includedServices, ""],
+      },
+    });
+  };
+
+  const removeService = (packageType, index) => {
+    if (formData[packageType].includedServices.length === 1) return; // Prevent removing the last one.
+    const newServices = [...formData[packageType].includedServices];
+    newServices.splice(index, 1);
+    setFormData({
+      ...formData,
+      [packageType]: { ...formData[packageType], includedServices: newServices },
+    });
+  };
+
+  // Handle image selection. We store each file (with preview URL) locally.
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+      name: file.name,
+    }));
+    setFormData({ ...formData, images: [...formData.images, ...newImages] });
+  };
+
+  const removeImage = (index) => {
+    const newImages = [...formData.images];
+    URL.revokeObjectURL(newImages[index].preview);
+    newImages.splice(index, 1);
+    setFormData({ ...formData, images: newImages });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
+
+    if (formData.images.length < 1) {
+      alert("Veuillez sélectionner au moins une image.");
       return;
     }
-    
-    setIsSubmitting(true);
-    
+
     try {
-      const serviceData = {
-        ...formData,
-        rating: 0,
-        createdAt: isEditMode ? formData.createdAt : new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+      const token = localStorage.getItem("accessToken");
+
+      // STEP 1: Upload each image individually to Cloudinary via the /upload endpoint.
+      // Your upload route (uploadRoutes.js) expects a file with key "file" and returns { url: result.secure_url }
+      const uploadPromises = formData.images.map((img) => {
+        const imageFormData = new FormData();
+        imageFormData.append("file", img.file);
+        return axios
+          .post("/upload", imageFormData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => res.data.url);
+      });
+      const imageUrls = await Promise.all(uploadPromises);
+
+      // STEP 2: Prepare the gig payload using the secure URLs for images.
+      const gigPayload = {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        packages: {
+          basic: formData.basic,
+          standard: formData.standard,
+          premium: formData.premium,
+        },
+        images: imageUrls,
       };
-      
-      if (isEditMode) {
-        updateService(id, serviceData);
-      } else {
-        addService(serviceData);
-      }
-      
-      navigate('/freelancer/services');
+
+      // Send the gig data as JSON. Since Axios base URL is "http://localhost:5000/api",
+      // posting to "/gigs" targets "http://localhost:5000/api/gigs".
+      const response = await axios.post("/gigs", gigPayload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Service (gig) created successfully:", response.data);
+      alert("Service créé avec succès!");
+      navigate(`/freelancer/${userId}/services`);
     } catch (error) {
-      console.error('Erreur lors de l\'enregistrement du service :', error);
-    } finally {
-      setIsSubmitting(false);
+      console.error("Erreur lors de la création du service:", error);
+      alert("Erreur lors de la création du service. Veuillez réessayer.");
     }
+  };
+
+  const renderPackageForm = (packageType) => {
+    const packageData = formData[packageType];
+    let packageTitle = "";
+    if (packageType === "basic") packageTitle = "Basique";
+    else if (packageType === "standard") packageTitle = "Standard";
+    else if (packageType === "premium") packageTitle = "Premium";
+
+    return (
+      <div className="package-column">
+        <h3 className="package-title">{packageTitle}</h3>
+        <div className="form-group">
+          <label className="form-label" htmlFor={`${packageType}-title`}>
+            Titre
+          </label>
+          <input
+            id={`${packageType}-title`}
+            className="form-control"
+            type="text"
+            placeholder={`Titre du forfait ${packageTitle.toLowerCase()}`}
+            value={packageData.title}
+            onChange={(e) => handlePackageChange(packageType, "title", e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor={`${packageType}-description`}>
+            Description
+          </label>
+          <textarea
+            id={`${packageType}-description`}
+            className="form-control"
+            placeholder={`Décrivez ce qui est inclus dans votre forfait ${packageTitle.toLowerCase()}`}
+            value={packageData.description}
+            onChange={(e) => handlePackageChange(packageType, "description", e.target.value)}
+          />
+          <p className="hint">Soyez précis sur ce que les clients recevront</p>
+        </div>
+        <div className="form-row">
+          <div className="form-group half">
+            <label className="form-label" htmlFor={`${packageType}-delivery-time`}>
+              Délai de livraison (jours)
+            </label>
+            <input
+              id={`${packageType}-delivery-time`}
+              className="form-control"
+              type="number"
+              min="1"
+              placeholder="ex. 3"
+              value={packageData.deliveryTime}
+              onChange={(e) => handlePackageChange(packageType, "deliveryTime", e.target.value)}
+            />
+          </div>
+          <div className="form-group half">
+            <label className="form-label" htmlFor={`${packageType}-revisions`}>
+              Nombre de révisions
+            </label>
+            <input
+              id={`${packageType}-revisions`}
+              className="form-control"
+              type="number"
+              min="0"
+              placeholder="ex. 2"
+              value={packageData.revisions}
+              onChange={(e) => handlePackageChange(packageType, "revisions", e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <div className="inclusions-header">
+            <label className="form-label">Inclusions</label>
+            <button
+              type="button"
+              className="btn btn-outline btn-sm add-inclusion"
+              onClick={() => addService(packageType)}
+            >
+              + Ajouter
+            </button>
+          </div>
+          {packageData.includedServices.map((service, index) => (
+            <div key={index} className="inclusion-item">
+              <input
+                className="form-control"
+                type="text"
+                placeholder={`Inclusion ${index + 1}`}
+                value={service}
+                onChange={(e) => handleServiceChange(packageType, index, e.target.value)}
+              />
+              <button
+                type="button"
+                className="btn-icon remove-inclusion"
+                onClick={() => removeService(packageType, index)}
+                aria-label="Supprimer l'inclusion"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="service-form-page">
-      <div className="card service-form-card">
-        <h1>Portée & Tarification</h1>
-        <h2>{isEditMode ? 'Modifier le Service' : 'Créer un Nouveau Service'}</h2>
-        
-        <form onSubmit={handleSubmit} className="service-form">
+      <div className="service-form-card">
+        <h1>Créer un nouveau service</h1>
+        <h2>Définissez vos forfaits de service pour attirer des clients potentiels</h2>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="title" className="form-label">Titre du Service</label>
+            <label className="form-label" htmlFor="service-title">
+              Titre du service
+            </label>
             <input
+              id="service-title"
+              className="form-control"
               type="text"
-              id="title"
-              name="title"
-              className={`form-control ${errors.title ? 'error' : ''}`}
+              placeholder="ex. Conception de logo professionnel"
               value={formData.title}
-              onChange={handleChange}
-              placeholder="Donnez un titre accrocheur à votre service"
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
             />
-            {errors.title && <div className="error-message">{errors.title}</div>}
-            <p className="hint">
-              Exemple : Conception de logo professionnel, Couverture 2D/3D, Version prête à imprimer
-            </p>
           </div>
-          
           <div className="form-group">
-            <label htmlFor="image" className="form-label">URL de l'Image</label>
-            <input
-              type="text"
-              id="image"
-              name="image"
-              className={`form-control ${errors.image ? 'error' : ''}`}
-              value={formData.image}
-              onChange={handleChange}
-              placeholder="https://example.com/image.jpg"
+            <label className="form-label" htmlFor="service-description">
+              Description du service
+            </label>
+            <textarea
+              id="service-description"
+              className="form-control"
+              placeholder="Décrivez votre service"
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
             />
-            {errors.image && <div className="error-message">{errors.image}</div>}
           </div>
-          
-          {formData.image && (
-            <div className="image-preview">
-              <img src={formData.image} alt="Aperçu du Service" />
-            </div>
-          )}
-
-          <h3>Packages</h3>
-          
-          <div className="packages-grid">
-            {Object.entries(formData.packages).map(([pkgKey, pkg]) => (
-              <div key={pkgKey} className="package-column">
-                <div className="form-group">
-                  <label htmlFor={`${pkgKey}-name`}>Nom du Package</label>
-                  <input
-                    type="text"
-                    id={`${pkgKey}-name`}
-                    name={`packages.${pkgKey}.name`}
-                    className="form-control"
-                    value={pkg.name}
-                    onChange={handleChange}
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor={`${pkgKey}-description`}>Description</label>
-                  <textarea
-                    id={`${pkgKey}-description`}
-                    name={`packages.${pkgKey}.description`}
-                    className={`form-control ${errors[`${pkgKey}_description`] ? 'error' : ''}`}
-                    value={pkg.description}
-                    onChange={handleChange}
-                    placeholder="Décrivez en détail ce que comprend ce package"
-                  />
-                  {errors[`${pkgKey}_description`] && (
-                    <div className="error-message">{errors[`${pkgKey}_description`]}</div>
-                  )}
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor={`${pkgKey}-price`}>Prix (DA)</label>
-                  <input
-                    type="number"
-                    id={`${pkgKey}-price`}
-                    name={`packages.${pkgKey}.price`}
-                    min="0"
-                    step="1"
-                    className={`form-control ${errors[`${pkgKey}_price`] ? 'error' : ''}`}
-                    value={pkg.price}
-                    onChange={handleChange}
-                  />
-                  {errors[`${pkgKey}_price`] && (
-                    <div className="error-message">{errors[`${pkgKey}_price`]}</div>
-                  )}
-                </div>
-              </div>
-            ))}
+          <div className="form-group">
+            <label className="form-label">Catégorie</label>
+            <select
+              id="service-category"
+              className="form-control"
+              value={formData.category}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
+            >
+              <option value="">Sélectionnez une catégorie</option>
+              <option value="design">Design graphique</option>
+              <option value="web">Développement web</option>
+              <option value="writing">Rédaction</option>
+              <option value="marketing">Marketing</option>
+              <option value="video">Vidéo et animation</option>
+              <option value="music">Musique et audio</option>
+              <option value="business">Services aux entreprises</option>
+              <option value="lifestyle">Style de vie</option>
+            </select>
           </div>
-
-          <h3>Révisions</h3>
-          
-          <div className="features-table">
-            <div className="table-row header">
-              <div className="table-cell">Fonctionnalités</div>
-              <div className="table-cell">Basique</div>
-              <div className="table-cell">Standard</div>
-              <div className="table-cell">Premium</div>
-            </div>
-            
-            <div className="table-row">
-              <div className="table-cell">Temps de livraison</div>
-              {Object.entries(formData.packages).map(([pkgKey, pkg]) => (
-                <div key={`${pkgKey}-delivery`} className="table-cell">
-                  <select
-                    name={`packages.${pkgKey}.deliveryTime`}
-                    className={`form-control ${errors[`${pkgKey}_deliveryTime`] ? 'error' : ''}`}
-                    value={pkg.deliveryTime}
-                    onChange={handleChange}
-                  >
-                    <option value="">Sélectionner</option>
-                    {deliveryTimes.map(time => (
-                      <option key={time} value={time}>{time}</option>
-                    ))}
-                  </select>
-                  {errors[`${pkgKey}_deliveryTime`] && (
-                    <div className="error-message">{errors[`${pkgKey}_deliveryTime`]}</div>
-                  )}
+          <div className="form-group">
+            <label className="form-label">Images du service</label>
+            <div className="image-upload-container">
+              <label className="image-upload-label">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="image-upload-input"
+                />
+                <div className="image-upload-button">
+                  <span>+ Ajouter des images</span>
                 </div>
-              ))}
+              </label>
+              <p className="hint">
+                Ajoutez jusqu'à 5 images pour présenter votre service (formats JPG, PNG)
+              </p>
             </div>
-            
-            <div className="table-row">
-              <div className="table-cell">Nombre de concepts inclus</div>
-              {Object.entries(formData.packages).map(([pkgKey, pkg]) => (
-                <div key={`${pkgKey}-concepts`} className="table-cell">
-                  <select
-                    name={`packages.${pkgKey}.concepts`}
-                    className="form-control"
-                    value={pkg.concepts}
-                    onChange={handleChange}
-                  >
-                    {conceptOptions.map(opt => (
-                      <option key={opt} value={opt}>{opt}</option>
-                    ))}
-                  </select>
-                </div>
-              ))}
-            </div>
-            
-            {[
-              { id: 'logoTransparency', label: 'Transparence du logo' },
-              { id: 'vectorFile', label: 'Fichier vectoriel' },
-              { id: 'printableFile', label: 'Fichier imprimable' },
-              { id: 'mockup3D', label: 'Maquette 3D' },
-              { id: 'sourceFile', label: 'Fichier source' },
-              { id: 'stationeryDesigns', label: 'Designs de papeterie' },
-              { id: 'socialMediaKit', label: 'Kit réseaux sociaux' }
-            ].map(feature => (
-              <div key={feature.id} className="table-row">
-                <div className="table-cell">{feature.label}</div>
-                {Object.keys(formData.packages).map(pkgKey => (
-                  <div key={`${pkgKey}-${feature.id}`} className="table-cell">
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        name={`packages.${pkgKey}.features.${feature.id}`}
-                        checked={formData.packages[pkgKey].features[feature.id]}
-                        onChange={handleChange}
-                      />
-                    </label>
+            {formData.images.length > 0 && (
+              <div className="image-preview-container">
+                {formData.images.map((image, index) => (
+                  <div key={index} className="image-preview-item">
+                    <img
+                      src={image.preview || "/placeholder.svg"}
+                      alt={`Aperçu ${index + 1}`}
+                    />
+                    <button
+                      type="button"
+                      className="image-remove-btn"
+                      onClick={() => removeImage(index)}
+                      aria-label="Supprimer l'image"
+                    >
+                      ×
+                    </button>
+                    <span className="image-name">{image.name}</span>
                   </div>
                 ))}
               </div>
-            ))}
+            )}
           </div>
-          
+          <h3 className="section-title">Forfaits de service</h3>
+          <div className="packages-grid">
+            {renderPackageForm("basic")}
+            {renderPackageForm("standard")}
+            {renderPackageForm("premium")}
+          </div>
           <div className="form-actions">
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={() => navigate('/freelancer/services')}
-              disabled={isSubmitting}
-            >
-              Annuler
+            <button type="button" className="btn btn-outline">
+              Enregistrer comme brouillon
             </button>
-            
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Enregistrement...' : isEditMode ? 'Mettre à jour' : 'Créer le Service'}
+            <button type="submit" className="btn btn-primary">
+              Publier le service
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-};
-
-export default ServiceForm;
+}

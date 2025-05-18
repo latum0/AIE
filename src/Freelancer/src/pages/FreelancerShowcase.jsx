@@ -20,36 +20,12 @@ function EarningsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const loginUser = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: "test@example.com", // Replace with actual user input
-          password: "123", // Replace with actual user input
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Échec de l'authentification: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      localStorage.setItem("token", data.token); // Stocke le token
-
-      return data.token;
-    } catch (error) {
-      console.error("❌ Erreur lors du login :", error);
-    }
-  };
+  
 
   const fetchInvoices = async () => {
     setLoading(true);
     try {
-      let token = localStorage.getItem("token");
+      let token = localStorage.getItem("accessToken");
 
       if (!token) {
         token = await loginUser(); // Login avant de récupérer le token

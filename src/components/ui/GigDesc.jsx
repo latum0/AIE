@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GigDesc.css";
@@ -28,11 +27,6 @@ const GigDesc = ({ data }) => {
     setCurrentImageIndex(index);
   };
 
-  /**
-   * Handle profile click:
-   * If the gig data contains a nested "user" object (populated from the backend),
-   * use its ID. Otherwise, fall back to using userId, _id, or id properties.
-   */
   const handleProfileClick = () => {
     const freelancerId = data.user
       ? data.user._id || data.user.id

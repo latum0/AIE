@@ -36,7 +36,7 @@ const Histor = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        let token = localStorage.getItem("token");
+        let token = localStorage.getItem("accessToken");
         if (!token) throw new Error("Authentification requise");
 
         const response = await fetch("http://localhost:5000/api/orders", {

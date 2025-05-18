@@ -1,10 +1,10 @@
 "use client"
 import React, { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { PlusCircle, Search, List, Grid, Info, RefreshCw } from 'lucide-react';
-import { ServicesContext } from "../context/ServicesContext"
+import { ServicesContext } from "../context/ServicesContext";
 import ServiceCard from './ServiceCard';
-import "./ServicesList.css"
+import "./ServicesList.css";
 
 const ListeServices = () => {
   const { services, deleteService, loadServices } = useContext(ServicesContext);
@@ -13,6 +13,9 @@ const ListeServices = () => {
   const [error, setError] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
   
+  // Extract the userId from the URL parameters (assuming the route is /freelancer/:userId/*)
+  const { userId } = useParams();
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -30,9 +33,7 @@ const ListeServices = () => {
     fetchServices();
   }, [loadServices]);
   
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
   
   const handleDeleteService = async (id) => {
     try {
@@ -46,7 +47,6 @@ const ListeServices = () => {
   const filteredServices = services
     ? services.filter(service => {
         if (!service) return false;
-        
         const searchLower = searchTerm.toLowerCase();
         return (
           service.title?.toLowerCase().includes(searchLower) ||
@@ -93,7 +93,8 @@ const ListeServices = () => {
           <p>Gérez et mettez à jour vos offres de services</p>
         </div>
         
-        <Link to="/freelancer/services/new" className="create-service-btn">
+        {/* Updated dynamic route using userId */}
+        <Link to={`/freelancer/${userId}/services/new`} className="create-service-btn">
           <PlusCircle size={18} />
           <span>Créer un nouveau service</span>
         </Link>
@@ -148,7 +149,7 @@ const ListeServices = () => {
             ) : (
               <>
                 <p>Vous n'avez pas encore créé de services. Commencez par créer votre premier service.</p>
-                <Link to="/freelancer/services/new" className="create-service-btn">
+                <Link to={`/freelancer/${userId}/services/new`} className="create-service-btn">
                   <PlusCircle size={18} />
                   <span>Créer un nouveau service</span>
                 </Link>
