@@ -11,6 +11,41 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+// Add this function to your Checkout component
+const handlePayment = async (orderData) => {
+  try {
+    const selectedPackage = gigData.packages[selectedTab];
+    
+    const response = await fetch("http://localhost:5000/api/invoices/createCheckoutSession", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify({
+        items: [{
+          name: `${gigData.title} - ${selectedPackage.name}`,
+          price: selectedPackage.price,
+          quantity: 1,
+        }],
+        orderId: orderData._id,
+        buyerId: currentUser._id,
+        sellerId: gigData.userId,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Payment session creation failed");
+    }
+
+    const { url } = await response.json();
+    window.location.href = url; // Redirect to Stripe checkout
+  } catch (err) {
+    setError(err.message);
+    console.error("❌ Payment error:", err);
+  }
+};
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -72,7 +107,7 @@ export default function Checkout() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body: JSON.stringify({
           gigId: id,
@@ -101,31 +136,34 @@ export default function Checkout() {
 
   // 🔹 Handle Invoice Creation Separately (Matches Invoice Schema)
   const handleCreateInvoice = async (orderData) => {
-    try {
-    const invoiceResponse = await fetch("http://localhost:5000/api/invoices/generate", {
+  try {
+    // Créer d'abord la facture "pending"
+    const invoiceResponse = await fetch("http://localhost:5000/api/invoices", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
       },
       body: JSON.stringify({
         orderId: orderData._id,
+        buyerId: orderData.buyerId,
+        sellerId: orderData.sellerId,
+        amount: orderData.price,
       }),
     });
 
-      if (!invoiceResponse.ok) {
-        const errorData = await invoiceResponse.text(); 
-        console.log("📝 Raw Invoice API response:", errorData);
-        throw new Error(`❌ Invoice API Error: ${errorData}`);
-      }
-
-      console.log("✅ Invoice Created");
-      navigate("/orders?success=true");
-    } catch (err) {
-      setError(err.message);
-      console.error("❌ Erreur lors de la création de la facture :", err);
+    if (!invoiceResponse.ok) {
+      const errorData = await invoiceResponse.text();
+      throw new Error(`Invoice creation failed: ${errorData}`);
     }
-  };
+
+    console.log("✅ Invoice Created");
+    await handlePayment(orderData);
+  } catch (err) {
+    setError(err.message);
+    console.error("❌ Erreur lors de la création de la facture :", err);
+  }
+};
 
   // 🔹 Combined Click Handler for Order & Invoice
   const handleOrderAndInvoice = async () => {

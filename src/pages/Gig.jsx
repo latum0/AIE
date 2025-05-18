@@ -187,6 +187,28 @@ function Gig() {
       setLoadingSeller(false);
     }
   }, [gig]);
+  useEffect(() => {
+  if (gig && gig.userId) {
+    fetch(`http://localhost:5000/api/users/${gig.userId}`)
+      .then(res => res.json())
+      .then(sellerData => {
+        setSeller({
+          profilePicture: sellerData.avatar || "/placeholder.svg",
+          username: sellerData.name,
+          studioName: sellerData.address?.city ? `Studio de ${sellerData.address.city}` : "Studio Indépendant",
+          rating: 4.9, // Valeur par défaut
+          feedbackCount: sellerData.completedOrders || 0,
+          location: sellerData.address?.country || "Localisation inconnue",
+          memberSince: new Date(sellerData.createdAt).toLocaleDateString("fr-FR"),
+          responseTime: "1-2 heures", // Valeur par défaut
+          lastDelivery: "N/A", // Valeur par défaut
+          languages: [sellerData.address?.country === "Algeria" ? "Arabe" : "Français"],
+          description: sellerData.description || "Aucune description fournie"
+        });
+      })
+      .catch(() => setSeller(null));
+  }
+}, [gig]);
 
   const loading = loadingGig || loadingSeller;
   if (loading) return <div>Loading...</div>;
