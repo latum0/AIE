@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Header.css';
 import { ClipboardList } from "lucide-react";
+
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem('accessToken');
@@ -30,6 +31,7 @@ const Header = ({ toggleSidebar }) => {
 
         
         <Link to={isLoggedIn ? '/Gigspage' : '/home'}>
+
           <img 
             src="/src/assets/icons/untitled-12.png" 
             alt="Logo" 
@@ -37,6 +39,7 @@ const Header = ({ toggleSidebar }) => {
           />
         </Link>
         <nav className="nav-links">
+
           <Link to="/Histor" className="seller-link">
         <ClipboardList />
       </Link>
