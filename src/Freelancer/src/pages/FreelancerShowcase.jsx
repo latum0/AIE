@@ -76,7 +76,9 @@ function EarningsPage() {
         <div className="container">
           <div className="page-header">
             <h2 className="page-title">Earnings</h2>
-            <a href="#" className="learn-more">Learn more about this page</a>
+            <a href="#" className="learn-more">
+              Learn more about this page
+            </a>
           </div>
 
           <h3 className="section-title">Available funds</h3>
@@ -89,7 +91,9 @@ function EarningsPage() {
             <div className="balance-amount">{formatCurrency(totalEarnings)}</div>
 
             <button className="withdraw-button">Withdraw balance</button>
-            <a href="#" className="manage-link">Manage payout methods</a>
+            <a href="#" className="manage-link">
+              Manage payout methods
+            </a>
           </div>
 
           <div className="filters">
@@ -133,7 +137,9 @@ function EarningsPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="empty-state">No invoices found.</td>
+                    <td colSpan={4} className="empty-state">
+                      No invoices found.
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -142,7 +148,7 @@ function EarningsPage() {
         </div>
       </main>
     </div>
-  );
+  )
 }
 
 export default EarningsPage;

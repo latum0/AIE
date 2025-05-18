@@ -17,17 +17,7 @@ const fetchUserName = async (userId) => {
   }
 };
 
-const fetchGigTitle = async (gigId) => {
-  try {
-    const response = await fetch(`http://localhost:5000/api/gigs/${gigId}`);
-    if (!response.ok) throw new Error("Échec de la récupération du gig");
-    const gigData = await response.json();
-    return gigData.title;
-  } catch (error) {
-    console.error("❌ Erreur lors de la récupération du gig :", error);
-    return "Titre inconnu";
-  }
-};
+
 
 const Histor = () => {
   const [orders, setOrders] = useState([]);
@@ -57,7 +47,7 @@ const Histor = () => {
             ...order,
             buyerName: await fetchUserName(order.buyerId),
             sellerName: await fetchUserName(order.sellerId),
-            gigTitle: await fetchGigTitle(order.gigId),
+            gigTitle: order.gigId?.title ,
           }))
         );
 
