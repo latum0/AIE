@@ -1,3 +1,4 @@
+// FreelancerProfile.jsx
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -12,9 +13,9 @@ import Portfolio from "../components/ui/Portfolio";
 import Reviews from "../components/ui/Reviews";
 import "./FreelancerProfile.css";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const FreelancerProfile = () => {
-  // Retrieve the route parameter and force it to a string
   const { id } = useParams();
   const profileId = id ? (typeof id === "string" ? id : id.toString()) : "";
   console.log("FreelancerProfile - Route param id:", profileId);
@@ -66,7 +67,9 @@ const FreelancerProfile = () => {
       try {
         const userId =
           profileData?._id
-            ? (typeof profileData._id === "string" ? profileData._id : profileData._id.toString())
+            ? (typeof profileData._id === "string"
+                ? profileData._id
+                : profileData._id.toString())
             : profileId;
         console.log("FreelancerProfile - Fetching gigs for userId:", userId);
         if (!userId) return;
@@ -113,10 +116,41 @@ const FreelancerProfile = () => {
     }
   };
 
-  // Navigate to conversation page
-  const handleContact = () => {
-    navigate("/conversation");
-  };
+  // Dynamic "Contact Seller" action: Find (or create) the conversation and navigate
+  const handleContact = async () => {
+  try {
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    if (!currentUser || !profileData) return;
+
+    let conversation;
+    try {
+      // Attempt to find an existing conversation
+      const res = await axios.get(
+        `http://localhost:5000/api/conversations/find/${currentUser._id}/${profileData._id}`
+      );
+      conversation = res.data;
+    } catch (error) {
+      // If the error status is 404, it means no conversation exists.
+      if (error.response && error.response.status === 404) {
+        // Create a new conversation
+        const createRes = await axios.post(
+          "http://localhost:5000/api/conversations",
+          {
+            members: [currentUser._id, profileData._id],
+          }
+        );
+        conversation = createRes.data;
+      } else {
+        // If some other error occurred, rethrow it.
+        throw error;
+      }
+    }
+    // Navigate to the conversation page.
+    navigate(`/conversations/${conversation._id}`);
+  } catch (err) {
+    console.error("Error contacting seller", err);
+  }
+};
 
   // Update active tab based on scroll
   useEffect(() => {

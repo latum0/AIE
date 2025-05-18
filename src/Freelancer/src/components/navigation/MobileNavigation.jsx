@@ -45,6 +45,17 @@ const MobileNavigation = () => {
         <span className="mobile-nav-icon">📋</span>
         <span className="mobile-nav-text">Commandes</span>
       </NavLink>
+
+      {/* New nav link for Conversations */}
+      <NavLink 
+        to={`/freelancer/${userId}/conversation-manager`} 
+        className={({ isActive }) => 
+          isActive ? 'mobile-nav-link active' : 'mobile-nav-link'
+        }
+      >
+        <span className="mobile-nav-icon">💬</span>
+        <span className="mobile-nav-text">Conversations</span>
+      </NavLink>
     </nav>
   );
 };

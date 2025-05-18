@@ -32,6 +32,9 @@ import ServiceForm from './Freelancer/src/pages/ServiceForm';
 import OrderRequests from './Freelancer/src/pages/OrderRequests';
 import FreelancerShowcase from './Freelancer/src/pages/FreelancerShowcase';
 
+// Import the new freelance conversation manager page
+import ConversationManager from './Freelancer/src/pages/conversation-manager';
+
 // UI components
 import Header from './components/ui/Header';
 import Footer from './components/ui/Footer';
@@ -71,7 +74,8 @@ function App() {
         <Route path="/confirmP" element={<ConfirmP />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/freelancerProfile/:id" element={<FreelancerProfile />} />
-        <Route path="/conversation" element={<ConversationPage />} />
+        {/* Updated conversation route with dynamic conversationId */}
+        <Route path="/conversations/:conversationId" element={<ConversationPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/formulaire-projet" element={<FormulaireProjet />} />
@@ -85,7 +89,7 @@ function App() {
     </>
   );
 
-  // Freelancer layout - using the dynamic :userId parameter.
+  // Freelancer layout – add a new route for the conversation manager.
   const FreelancerLayout = () => (
     <ServicesProvider>
       <OrdersProvider>
@@ -101,8 +105,9 @@ function App() {
                 <Route path="services/edit/:id" element={<ServiceForm />} />
                 <Route path="services/editGig/:id" element={<EditGig />} />
                 <Route path="orders" element={<OrderRequests />} />
-
                 <Route path="Showcase" element={<FreelancerShowcase />} />
+                {/* New route for the conversation manager */}
+                <Route path="conversation-manager" element={<ConversationManager />} />
               </Routes>
             </div>
           </div>
@@ -111,7 +116,6 @@ function App() {
       </OrdersProvider>
     </ServicesProvider>
   );
-
 
   return (
     <Router>
