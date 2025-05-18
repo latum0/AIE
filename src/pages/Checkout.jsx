@@ -1,246 +1,224 @@
-"use client"
-
-import { useState } from "react"
-import { CreditCard, Clock, RefreshCw, Check, X } from "lucide-react"
-import "./checkout.css"
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Clock, RefreshCw, Check } from "lucide-react";
+import "./checkout.css";
 
 export default function Checkout() {
-  // État pour le formulaire
-  const [formData, setFormData] = useState({
-    paymentMethod: "card",
-  })
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [gigData, setGigData] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("basic");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // État pour la carte sélectionnée
-  const [selectedCard, setSelectedCard] = useState("visa")
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Non authentifié");
 
-  // État pour l'onglet sélectionné
-  const [selectedTab, setSelectedTab] = useState("basic")
+        const response = await fetch("http://localhost:5000/api/auth/me", {
+          credentials: "include",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-  // Données du gig
-  const gigData = {
-    title: "Je vais créer une vidéo promotionnelle pour votre entreprise",
-    packages: {
-      basic: {
-        name: "BASIC PROMO",
-        price: 868,
-        description: "Basic Package Only Laptop-scenes Includes, Background Music, Logo, and 720HD Video",
-        delivery: "4 Days Delivery",
-        revisions: "1 Revision",
-        features: [
-          { name: "8 captions", included: true },
-          { name: "5 screenshots", included: true },
-          { name: "Screen recording", included: false },
-          { name: "Add logo", included: true },
-          { name: "Dynamic transitions", included: true },
-          { name: "30 seconds running time", included: true },
-        ],
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Non authentifié");
+        }
+
+        const userData = await response.json();
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error("❌ Auth Error:", error);
+        navigate("/login");
+      }
+    };
+
+    fetchCurrentUser();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!id || !currentUser) return;
+
+    const fetchGig = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/gigs/${id}`);
+        if (!response.ok) throw new Error("Failed to fetch gig");
+
+        const gig = await response.json();
+        setGigData(gig);
+      } catch (error) {
+        console.error("❌ Error fetching gig:", error);
+      }
+    };
+
+    fetchGig();
+  }, [id, currentUser]);
+
+  // 🔹 Handle Order Creation Separately
+  const handleCreateOrder = async () => {
+    try {
+      if (!currentUser) throw new Error("Utilisateur non connecté");
+      if (!gigData) throw new Error("Gig data not loaded");
+
+      const selectedPackage = gigData.packages[selectedTab]; 
+
+      const orderResponse = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          gigId: id,
+          buyerId: currentUser._id,
+          sellerId: gigData.userId,
+          price: parseInt(selectedPackage.price),
+          status: "pending",
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        const errorData = await orderResponse.json();
+        throw new Error(errorData.message || "Order creation failed");
+      }
+
+      const orderData = await orderResponse.json();
+      console.log("✅ Order Created:", orderData);
+
+      return orderData; // 🔥 Return the order data so it can be used in invoice
+    } catch (err) {
+      setError(err.message);
+      console.error("❌ Erreur de commande :", err);
+      throw err;
+    }
+  };
+
+  // 🔹 Handle Invoice Creation Separately (Matches Invoice Schema)
+  const handleCreateInvoice = async (orderData) => {
+    try {
+    const invoiceResponse = await fetch("http://localhost:5000/api/invoices/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
-      standard: {
-        name: "STANDARD PROMO",
-        price: 1299,
-        description: "Standard Package with Desktop & Mobile scenes, Background Music, Logo, and 1080HD Video",
-        delivery: "3 Days Delivery",
-        revisions: "2 Revisions",
-        features: [
-          { name: "12 captions", included: true },
-          { name: "8 screenshots", included: true },
-          { name: "Screen recording", included: true },
-          { name: "Add logo", included: true },
-          { name: "Dynamic transitions", included: true },
-          { name: "45 seconds running time", included: true },
-        ],
-      },
-      premium: {
-        name: "PREMIUM PROMO",
-        price: 1899,
-        description: "Premium Package with All Device scenes, Custom Music, Logo Animation, and 4K Video",
-        delivery: "2 Days Delivery",
-        revisions: "Unlimited Revisions",
-        features: [
-          { name: "20 captions", included: true },
-          { name: "15 screenshots", included: true },
-          { name: "Screen recording", included: true },
-          { name: "Add logo", included: true },
-          { name: "Dynamic transitions", included: true },
-          { name: "60 seconds running time", included: true },
-        ],
-      },
-    },
-  }
+      body: JSON.stringify({
+        orderId: orderData._id,
+      }),
+    });
 
-  // Obtenir le package sélectionné
-  const selectedPackage = gigData.packages[selectedTab]
+      if (!invoiceResponse.ok) {
+        const errorData = await invoiceResponse.text(); 
+        console.log("📝 Raw Invoice API response:", errorData);
+        throw new Error(`❌ Invoice API Error: ${errorData}`);
+      }
 
-  // Gérer le changement de méthode de paiement
-  const handlePaymentMethodChange = (method) => {
-    setFormData({
-      ...formData,
-      paymentMethod: method,
-    })
-  }
+      console.log("✅ Invoice Created");
+      navigate("/orders?success=true");
+    } catch (err) {
+      setError(err.message);
+      console.error("❌ Erreur lors de la création de la facture :", err);
+    }
+  };
 
-  // Gérer la sélection de carte
-  const handleCardSelection = (card) => {
-    setSelectedCard(card)
-  }
+  // 🔹 Combined Click Handler for Order & Invoice
+  const handleOrderAndInvoice = async () => {
+    setLoading(true);
+    setError(null);
 
-  // Gérer la soumission du formulaire
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Données du formulaire:", formData)
-    console.log("Package sélectionné:", selectedPackage)
-    console.log("Carte sélectionnée:", selectedCard)
-    alert(`Commande passée avec succès! Montant total: ${selectedPackage.price} ₹`)
-  }
+    try {
+      const orderData = await handleCreateOrder();
+      await handleCreateInvoice(orderData);
+    } catch (error) {
+      console.error("❌ Error processing order and invoice:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!gigData || !currentUser) return <div>Chargement...</div>;
+
+  const selectedPackage = gigData.packages[selectedTab];
 
   return (
-    <div className="checkout-page">
-      <main className="checkout-content">
+    <div className="checkout">
+      <main className="checkout__main">
         <div className="container">
-          <div className="checkout-grid">
-            {/* Détails du gig à gauche */}
-            <div className="gig-details">
-              <h1 className="gig-title">{gigData.title}</h1>
+          <div className="checkout__grid">
+            {/* Gig Details */}
+            <div className="checkout__gig-details">
+              <h1 className="checkout__title">{gigData.title}</h1>
 
-              <div className="package-card">
-                <div className="package-tabs">
-                  <button
-                    className={`tab-button ${selectedTab === "basic" ? "active" : ""}`}
-                    onClick={() => setSelectedTab("basic")}
-                  >
-                    Basic
-                  </button>
-                  <button
-                    className={`tab-button ${selectedTab === "standard" ? "active" : ""}`}
-                    onClick={() => setSelectedTab("standard")}
-                  >
-                    Standard
-                  </button>
-                  <button
-                    className={`tab-button ${selectedTab === "premium" ? "active" : ""}`}
-                    onClick={() => setSelectedTab("premium")}
-                  >
-                    Premium
-                  </button>
+              <div className="checkout__package-card">
+                <div className="checkout__tabs">
+                  {["basic", "standard", "premium"].map((pkg) => (
+                    <button
+                      key={pkg}
+                      className={`checkout__tab ${selectedTab === pkg ? "active" : ""}`}
+                      onClick={() => setSelectedTab(pkg)}
+                    >
+                      {pkg.charAt(0).toUpperCase() + pkg.slice(1)}
+                    </button>
+                  ))}
                 </div>
 
-                <div className="package-content">
-                  <div className="package-header">
-                    <h2 className="package-name">{selectedPackage.name}</h2>
-                    <div className="package-price">₹{selectedPackage.price}</div>
+                <div className="checkout__package-content">
+                  <div className="checkout__package-header">
+                    <h2 className="checkout__package-name">{selectedPackage.name || "No Package Name"}</h2>
+                    <div className="checkout__package-price">{selectedPackage.price || 0} €</div>
                   </div>
 
-                  <div className="package-divider"></div>
-
-                  <p className="package-description">{selectedPackage.description}</p>
-
-                  <div className="package-delivery-info">
-                    <div className="delivery-time">
-                      <Clock size={16} className="info-icon" />
-                      <span>{selectedPackage.delivery}</span>
+                  <div className="checkout__delivery-info">
+                    <div className="checkout__delivery-time">
+                      <Clock size={16} />
+                      <span>{selectedPackage.deliveryDays || 3} jours</span>
                     </div>
-                    <div className="revision-count">
-                      <RefreshCw size={16} className="info-icon" />
-                      <span>{selectedPackage.revisions}</span>
+                    <div className="checkout__revision-count">
+                      <RefreshCw size={16} />
+                      <span>{selectedPackage.revisions || 1} Révision</span>
                     </div>
                   </div>
 
-                  <div className="package-features">
-                    {selectedPackage.features.map((feature, index) => (
-                      <div key={index} className="feature-item">
-                        <div className={`feature-icon-circle ${feature.included ? "included" : "not-included"}`}>
-                          {feature.included ? (
-                            <Check size={14} className="feature-icon-circle.included " />
-                          ) : (
-                            <X size={14} className="feature-icon-circle.not-included" />
-                          )}
-                        </div>
-                        <span className="feature-text">{feature.name}</span>
-                      </div>
+                  <ul className="checkout__features">
+                    {selectedPackage.includedServices.map((service, index) => (
+                      <li key={index} className="checkout__feature-item">
+                        <Check size={14} className="included" />
+                        <span className="checkout__feature-text">{service}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               </div>
             </div>
 
-            {/* Résumé et paiement à droite */}
-            <div className="order-summary">
+            {/* Summary Section */}
+            <div className="checkout__summary">
               <h2>Résumé de la commande</h2>
 
-              <div className="summary-details">
-                <div className="summary-row">
-                  <span>Package</span>
-                  <span>{selectedPackage.name}</span>
-                </div>
-
-                <div className="summary-row">
-                  <span>Délai de livraison</span>
-                  <span>{selectedPackage.delivery.split(" ")[0]} jours</span>
-                </div>
-              </div>
-
-              <div className="order-totals">
-                <div className="total-row grand-total">
+              <div className="checkout__totals">
+                <div className="checkout__total-row checkout__grand-total">
                   <span>Total à payer:</span>
-                  <span>₹{selectedPackage.price}</span>
+                  <span>{selectedPackage.price} €</span>
                 </div>
               </div>
 
-              {/* Section méthode de paiement */}
-              <div className="payment-methods">
-                <h3>Méthode de paiement</h3>
-
-                <div className="payment-option">
-                  <div className="payment-radio">
-                    <input
-                      type="radio"
-                      id="card-payment"
-                      name="payment-method"
-                      checked={formData.paymentMethod === "card"}
-                      onChange={() => handlePaymentMethodChange("card")}
-                    />
-                    <label htmlFor="card-payment">
-                      <CreditCard size={16} className="payment-icon" />
-                      Carte bancaire
-                    </label>
-                  </div>
-
-                  {formData.paymentMethod === "card" && (
-                    <div className="card-selection">
-                      <button
-                        type="button"
-                        className={`card-button ${selectedCard === "visa" ? "selected" : ""}`}
-                        onClick={() => handleCardSelection("visa")}
-                      >
-                        <div className="card-logo visa">
-                          <span>VISA</span>
-                        </div>
-                        <span className="card-name">Visa</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        className={`card-button ${selectedCard === "mastercard" ? "selected" : ""}`}
-                        onClick={() => handleCardSelection("mastercard")}
-                      >
-                        <div className="card-logo mastercard">
-                          <div className="mc-circle red"></div>
-                          <div className="mc-circle yellow"></div>
-                        </div>
-                        <span className="card-name">Mastercard</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <button className="place-order-btn" onClick={handleSubmit}>
-                Passer la commande
+              <button 
+                className="checkout__order-btn" 
+                onClick={handleOrderAndInvoice}
+                disabled={loading}
+              >
+                {loading ? "Traitement..." : "Passer la commande"}
               </button>
             </div>
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

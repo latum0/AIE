@@ -76,8 +76,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/formulaire-projet" element={<FormulaireProjet />} />
         <Route path="/add-timeline" element={<AddTimelineAndBudget />} />
-        <Route path="/FreelancerShowcase" element={<FreelancerShowcase />} />
-        <Route path="/Checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout/:id" element={<Checkout />} />
         <Route path="/Histor" element={<Histor />} />
         <Route path="/Gigspage" element={<Gigspage />} />
       </Routes>
@@ -102,6 +102,7 @@ function App() {
                 <Route path="services/editGig/:id" element={<EditGig />} />
                 <Route path="orders" element={<OrderRequests />} />
 
+                <Route path="Showcase" element={<FreelancerShowcase />} />
               </Routes>
             </div>
           </div>
@@ -110,6 +111,7 @@ function App() {
       </OrdersProvider>
     </ServicesProvider>
   );
+
 
   return (
     <Router>

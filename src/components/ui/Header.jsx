@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Search } from 'lucide-react';
 import './Header.css';
+import { ClipboardList } from "lucide-react";
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
@@ -57,9 +58,12 @@ const Header = ({ toggleSidebar }) => {
   return (
     <header className="header">
       <div className="header-content">
-        <Link to={isLoggedIn ? '/dashboard' : '/home'}>
+
+        
+        <Link to={isLoggedIn ? '/Gigspage' : '/home'}>
+
           <img 
-            src="/src/assets/icons/logoMC.png" 
+            src="/src/assets/icons/untitled-12.png" 
             alt="Logo" 
             className="logo"
           />
@@ -90,6 +94,10 @@ const Header = ({ toggleSidebar }) => {
           </div>
         )}
         <nav className="nav-links">
+
+          <Link to="/Histor" className="seller-link">
+        <ClipboardList />
+      </Link>
           <Link 
             to={user ? `/freelancer/${user._id || user.id}/dashboard` : '/freelancer'}
             className="seller-link"

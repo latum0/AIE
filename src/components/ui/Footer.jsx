@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="content-wrapper">
         <div className="logo-section">
           <img 
-            src="src/assets/icons/logoMC.png" 
+            src="src/assets/icons/untitled-12.png" 
             alt="Logo Skill Market" 
             className="logoAIE" 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

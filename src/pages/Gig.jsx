@@ -289,7 +289,7 @@ function Gig() {
         <ReviewsComment {...comments} />
       </div>
       <div className="right-column">
-        <CardService packages={cardServicePackages} />
+        <CardService packages={cardServicePackages} gigId={id} />
         <button className="contact-seller">Contact Seller</button>
       </div>
     </div>

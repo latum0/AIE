@@ -2,130 +2,105 @@
 
 import { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
-import { Search, Eye, FileText, Download, Calendar, X, User } from "lucide-react";
+import { Search, Download } from "lucide-react";
 import "./Histor.css";
+
+const fetchUserName = async (userId) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/users/${userId}`);
+    if (!response.ok) throw new Error("Échec de la récupération du nom d'utilisateur");
+    const userData = await response.json();
+    return userData.name;
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du nom :", error);
+    return "Nom inconnu";
+  }
+};
+
+const fetchGigTitle = async (gigId) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/gigs/${gigId}`);
+    if (!response.ok) throw new Error("Échec de la récupération du gig");
+    const gigData = await response.json();
+    return gigData.title;
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du gig :", error);
+    return "Titre inconnu";
+  }
+};
 
 const Histor = () => {
   const [orders, setOrders] = useState([]);
-  const [dateFilter, setDateFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
-    const loginUser = async () => {
-  try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: "test@example.com", // Replace with actual user input
-        password: "123", // Replace with actual user input
-      }),
-    });
+    const fetchOrders = async () => {
+      try {
+        let token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Authentification requise");
 
-    if (!response.ok) {
-      throw new Error(`Échec de l'authentification: ${response.status} ${response.statusText}`);
-    }
+        const response = await fetch("http://localhost:5000/api/orders", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    const data = await response.json();
-    localStorage.setItem("token", data.token); // Stocke le token
+        if (!response.ok) throw new Error("Erreur de récupération des commandes");
 
-    return data.token;
-  } catch (error) {
-    console.error("❌ Erreur lors du login :", error);
-  }
-};
+        let ordersData = await response.json();
 
-const fetchOrders = async () => {
-  try {
-    let token = localStorage.getItem("token");
+        // Récupération des noms et titres pour chaque commande
+        ordersData = await Promise.all(
+          ordersData.map(async (order) => ({
+            ...order,
+            buyerName: await fetchUserName(order.buyerId),
+            sellerName: await fetchUserName(order.sellerId),
+            gigTitle: await fetchGigTitle(order.gigId),
+          }))
+        );
 
-    if (!token) {
-      token = await loginUser(); // Login avant de récupérer le token
-      if (!token) throw new Error("Authentification échouée, aucun token disponible");
-    }
+        setOrders(ordersData);
+      } catch (error) {
+        console.error("❌ Erreur lors du fetch des commandes :", error);
+      }
+    };
 
-    const response = await fetch("http://localhost:5000/api/orders", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Échec du fetch: ${response.status} ${response.statusText}`);
-    }
-
-    const ordersData = await response.json();
-    setOrders(ordersData);
-  } catch (error) {
-    console.error("❌ Erreur lors du fetch :", error);
-  }
-};
-
-// Appel de la fonction
-fetchOrders();
+    fetchOrders();
   }, []);
 
-  const filteredOrders = orders.filter((order) => {
-    const matchesDate = dateFilter ? order.createdAt.includes(dateFilter) : true;
-    const matchesSearch = searchTerm
-      ? order._id.toLowerCase().includes(searchTerm.toLowerCase())
-      : true;
-    return matchesDate && matchesSearch;
-  });
-
   const generatePDF = (order) => {
-  try {
-    const doc = new jsPDF();
+    try {
+      const doc = new jsPDF();
 
-    // Vérifier que l'objet order existe
-    if (!order) {
-      throw new Error("Aucune commande fournie");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text(`Facture - Commande ${order._id}`, 20, 20);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+      doc.text(`Acheteur: ${order.buyerName}`, 20, 30);
+      doc.text(`Vendeur: ${order.sellerName}`, 20, 40);
+      doc.text(`Gig: ${order.gigTitle}`, 20, 50);
+      doc.text(`Date de création: ${new Date(order.createdAt).toLocaleDateString("fr-FR")}`, 20, 60);
+      doc.text(`Prix: ${order.price.toFixed(2)} €`, 20, 70);
+      doc.text(`Statut: ${order.status}`, 20, 80);
+
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.5);
+      doc.line(10, 90, 200, 90);
+
+      doc.setFontSize(10);
+      doc.text("Merci pour votre commande !", 20, 100);
+
+      doc.save(`Facture_${order._id}.pdf`);
+    } catch (error) {
+      console.error("❌ Erreur de génération PDF :", error);
+      alert("Erreur lors de la génération du PDF.");
     }
+  };
 
-    // Section 1 : En-tête
-    doc.setFontSize(18);
-    doc.text(`Facture - Commande ${order._id || "N/A"}`, 20, 20);
-
-    // Section 2 : Informations client
-    doc.setFontSize(12);
-    const buyerName = order.buyerId?.name || "Client non spécifié";
-    const orderDate = order.createdAt 
-      ? new Date(order.createdAt).toLocaleDateString("fr-FR")
-      : "Date inconnue";
-    const totalAmount = order.price?.toFixed(2) || "0.00";
-
-    doc.text(`Client: ${buyerName}`, 20, 30);
-    doc.text(`Date: ${orderDate}`, 20, 40);
-    doc.text(`Montant Total: ${totalAmount} €`, 20, 50);
-
-    // Section 3 : Liste des produits
-    doc.text("Produits commandés:", 20, 60);
-    let yPosition = 70;
-
-    if (order.gigId?.length > 0) {
-      order.gigId.forEach((gig, index) => {
-        const title = gig?.title || "Produit sans nom";
-        const price = gig?.packages?.basic?.price?.toFixed(2) || "0.00";
-        doc.text(`${index + 1}. ${title} - ${price} €`, 20, yPosition);
-        yPosition += 10;
-      });
-    } else {
-      doc.text("Aucun produit trouvé", 20, yPosition);
-    }
-
-    // Génération du fichier
-    doc.save(`Facture_${order._id || "sans-id"}.pdf`);
-
-  } catch (error) {
-    console.error("❌ Erreur de génération PDF :", error);
-    alert("Erreur lors de la génération du PDF. Vérifier la console.");
-  }
-};
   return (
     <div className="order-history-container">
       <header className="order-header">
@@ -151,15 +126,21 @@ fetchOrders();
           <thead>
             <tr>
               <th>ID Commande</th>
+              <th>Acheteur</th>
+              <th>Vendeur</th>
+              <th>Gig</th>
               <th>Date</th>
               <th>Montant</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.map((order) => (
+            {orders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
+                <td>{order.buyerName}</td>
+                <td>{order.sellerName}</td>
+                <td>{order.gigTitle}</td>
                 <td>{new Date(order.createdAt).toLocaleDateString("fr-FR")}</td>
                 <td className="amount-cell">{order.price.toFixed(2)} €</td>
                 <td className="actions-cell">

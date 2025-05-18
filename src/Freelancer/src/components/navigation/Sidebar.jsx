@@ -65,6 +65,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <span className="nav-icon">📋</span>
             <span className="nav-text">Commandes</span>
           </NavLink>
+          <NavLink 
+            to={`/freelancer/${userId}/Showcase`} 
+            className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+            onClick={isMobile ? toggleSidebar : undefined}
+          >
+            <span className="nav-icon">📋</span>
+            <span className="nav-text">invoices</span>
+          </NavLink>
         </nav>
 
         <div className="sidebar-footer">
