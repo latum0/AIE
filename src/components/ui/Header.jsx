@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Search } from 'lucide-react';
+import { Search, ClipboardList } from 'lucide-react';
 import './Header.css';
-import { ClipboardList } from "lucide-react";
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
@@ -14,11 +13,12 @@ const Header = ({ toggleSidebar }) => {
   // New states for search functionality
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // Debounce and fetch suggestions on search query change
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      if (searchQuery.trim() !== '') {
+      if (searchQuery.trim() !== "") {
         axios
           .get(`http://localhost:5000/api/gigs/categories/search?query=${encodeURIComponent(searchQuery)}`)
           .then((res) => {
@@ -55,72 +55,88 @@ const Header = ({ toggleSidebar }) => {
     }
   };
 
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+
   return (
     <header className="header">
-      <div className="header-content">
-
-        
-        <Link to={isLoggedIn ? '/Gigspage' : '/home'}>
-
-          <img 
-            src="/src/assets/icons/untitled-12.png" 
-            alt="Logo" 
-            className="logo"
-          />
-        </Link>
-        {isLoggedIn && (
-          <div className="search-bar">
-            <input 
-              type="text"
-              placeholder="Rechercher …" 
-              className="search-input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+      <div className="header-container">
+        <div className="header-left">
+          <Link to={isLoggedIn ? '/Gigspage' : '/home'} className="logo-container">
+            <img 
+              src="/src/assets/icons/untitled-12.png" 
+              alt="Logo" 
+              className="logo"
             />
-            <Search size={24} className="search-icon" />
-            {suggestions.length > 0 && (
-              <ul className="suggestions-dropdown">
-                {suggestions.map((item, idx) => (
-                  <li 
-                    key={idx} 
-                    className="suggestion-item" 
-                    onClick={() => handleSuggestionClick(item)}
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
+          </Link>
+          
+          {isLoggedIn && (
+            <div className="search-container">
+              <div className="search-bar">
+                
+                <input 
+                  type="text"
+                  placeholder="Rechercher …" 
+                  className="search-input"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              {suggestions.length > 0 && (
+                <ul className="suggestions-dropdown">
+                  {suggestions.map((item, idx) => (
+                    <li 
+                      key={idx} 
+                      className="suggestion-item" 
+                      onClick={() => handleSuggestionClick(item)}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </div>
+        
         <nav className="nav-links">
-
-          <Link to="/Histor" className="seller-link">
-        <ClipboardList />
-      </Link>
+          <Link to="/Histor" className="nav-link icon-link">
+            <ClipboardList size={20} />
+          </Link>
+          
           <Link 
             to={user ? `/freelancer/${user._id || user.id}/dashboard` : '/freelancer'}
-            className="seller-link"
+            className="nav-link"
           >
             Freelancer
           </Link>
+          
           {!isLoggedIn ? (
-            <>
+            <div className="auth-buttons">
               <Link to="/login" className="signin-link">
                 Se connecter
               </Link>
-              <Link to="/signup" className="join-btn">
+              <Link to="/signup" className="signup-button">
                 S'inscrire
               </Link>
-            </>
+            </div>
           ) : (
-            <div className="user-menu">
-              <Link to="/profile" className="profile-link">
-                <span>Mon compte</span>
-              </Link>
-              <button onClick={handleLogout} className="logout-btn">
-                Déconnexion
+            <div className="user-menu-container">
+              <button onClick={toggleUserMenu} className="user-menu-button">
+                <span className="user-initial">{user?.name?.charAt(0) || 'U'}</span>
               </button>
+              
+              {isUserMenuOpen && (
+                <div className="user-dropdown">
+                  <Link to="/profile" className="dropdown-item">
+                    Mon compte
+                  </Link>
+                  <button onClick={handleLogout} className="dropdown-item logout-item">
+                    Déconnexion
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </nav>
